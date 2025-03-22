@@ -27,10 +27,25 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    googleId: {
+      type: String,
+      sparse: true,
+    },
+    authType: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+    },
+    profilePicture: {
+      type: String,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
     password: {
       type: String,
-      required: [true, "Password Wajib Diisi"],
-      minlength: [6, "Password Wajib Minimal 6 Karakter"],
     },
     deletedAt: {
       type: Date,
@@ -42,14 +57,6 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-userSchema.pre("save", async function (next) {
-  if (this.isModified("password")) {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-  }
-  next();
-});
 
 const phoneRegex = /^(?:\+62|62|0)8[1-9]\d{8,9}$/;
 userSchema.pre("save", async function (next) {
@@ -64,10 +71,6 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
-
-userSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

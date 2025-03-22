@@ -7,14 +7,12 @@ const errorName = {
 
 const errorMsg = {
   USER_NOT_FOUND: "User Not Found",
+  ORDER_NOT_FOUND: "Order Not Found",
   WRONG_CREDENTIALS: "Wrong Email or Password",
   NOT_VERIFIED: "User Not Verified",
   USER_ALREADY_EXISTS: "User Already Exists",
-  TITLE_DESCRIPTION_REQUIRED: "Title and Description are Required",
-  CATEGORY_NOT_FOUND: "Category Not Found",
-  CAMPAIGN_NOT_FOUND: "Campaign Not Found",
-  DONATION_NOT_FOUND: "Donation Not Found",
-  KYC_NOT_FOUND: "KYC Not Found",
+  TITLE_ALREADY_EXISTS: "Title Already Exists",
+  INVALID_CREDENTIALS: "Invalid Email or Password",
   VERIFICATION_LINK_EXPIRED: "Verification Link invalid Or Expired",
 };
 
