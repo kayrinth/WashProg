@@ -1,12 +1,12 @@
 import Header from "../components/templates/header";
+import { Menu } from "../components/organism";
 import Footer from "../components/templates/footer";
-import { Home } from "../components/organism";
 
-export default function HomePage() {
+export default function MenuPage() {
   return (
     <>
       <Header />
-      <Home />
+      <Menu />
       <Footer />
     </>
   );

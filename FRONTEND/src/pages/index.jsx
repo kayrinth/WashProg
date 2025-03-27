@@ -1,3 +1,4 @@
-import CobaPage from "./Coba";
+import HomePage from "./HomePage";
+import MenuPage from "./MenuPage";
 
-export default CobaPage;
+export { HomePage, MenuPage };

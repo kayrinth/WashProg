@@ -51,10 +51,10 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-6 text-black font-medium">
-          <a href="#" className="hover:text-gray-600">
+          <a href="/" className="hover:text-gray-600">
             Beranda
           </a>
-          <a href="#" className="hover:text-gray-600">
+          <a href="/menu" className="hover:text-gray-600">
             Daftar Menu
           </a>
           <a href="#" className="hover:text-gray-600">
@@ -81,10 +81,10 @@ export default function Header() {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4 flex flex-col space-y-4 text-center md:hidden">
-            <a href="#" className="hover:text-gray-600">
+            <a href="/" className="hover:text-gray-600">
               Beranda
             </a>
-            <a href="#" className="hover:text-gray-600">
+            <a href="/menu" className="hover:text-gray-600">
               Daftar Menu
             </a>
             <a href="#" className="hover:text-gray-600">
