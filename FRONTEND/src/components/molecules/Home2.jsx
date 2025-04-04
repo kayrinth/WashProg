@@ -1,4 +1,4 @@
-import { logo2 } from "../../assets";
+import { logo2, gambar2, gambar3, gambar1 } from "../../assets";
 export default function Home2() {
   return (
     <div className="pt-7">
@@ -25,13 +25,17 @@ export default function Home2() {
 
                 {/* Gambar utama */}
                 <img
-                  src="https://picsum.photos/200/300"
+                  src={gambar2}
                   alt="Premium Treatment"
                   className="w-full h-48 object-cover rounded-lg border-4 border-solid border-[#FF8225]"
                 />
               </div>
 
               <h2 className="text-xl font-bold text-white mt-4">Fast Wash</h2>
+              <p className="text-sm text-gray-400">
+                Fast Wash adalah proses pembersihan meliputi upper, midsole, dan
+                outsole
+              </p>
             </div>
             <div className="bg-black  w-full max-w-md mx-auto rounded-xl shadow-lg overflow-hidden text-center p-4 border-spacing-64">
               <div className="relative">
@@ -44,7 +48,7 @@ export default function Home2() {
 
                 {/* Gambar utama */}
                 <img
-                  src="https://picsum.photos/200/300"
+                  src={gambar1}
                   alt="Premium Treatment"
                   className="w-full h-48 object-cover rounded-lg border-4 border-solid border-[#FF8225]"
                 />
@@ -53,6 +57,10 @@ export default function Home2() {
               <h2 className="text-xl font-bold text-white mt-4">
                 Deep Cleaning
               </h2>
+              <p className="text-sm text-gray-400">
+                Deep Wash adalah proses pembersihan meliputi upper, midsole,
+                outsole, dan insole
+              </p>
             </div>
             <div className="bg-black w-full max-w-md mx-auto rounded-xl shadow-lg overflow-hidden text-center p-4">
               <div className="relative">
@@ -65,18 +73,22 @@ export default function Home2() {
 
                 {/* Gambar utama */}
                 <img
-                  src="https://picsum.photos/200/300"
+                  src={gambar3}
                   alt="Premium Treatment"
                   className="w-full h-48 object-cover rounded-lg border-4 border-solid border-[#FF8225]"
                 />
               </div>
 
               <h2 className="text-xl font-bold text-white mt-4">Repaint</h2>
+              <p className="text-sm text-gray-400">
+                Repaint adalah proses pengecatan ulang sepatu untuk
+                mengembalikan atau mengubah warna.
+              </p>
             </div>
           </div>
         </div>
         <a
-          href="#"
+          href="/menu"
           className="mt-10 inline-block bg-[#FF8225] hover:bg-opacity-50 text-white text-xl md:text-2xl xl:text-3xl font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
         >
           Selengkapnya...

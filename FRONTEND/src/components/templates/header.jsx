@@ -40,9 +40,10 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 w-full z-50 py-4 px-6 flex justify-between items-center max-w-7xl mx-auto rounded-b-2xl transition-all duration-300 ${
-          isScrolled ? "shadow-lg backdrop-blur-xl pt-4" : ""
-        }`}
+        className={`sticky top-0 w-full z-50 py-4 px-6 flex justify-between items-center max-w-7xl mx-auto rounded-b-2xl transition-all duration-300
+    ${isScrolled && !isOpen ? "shadow-lg backdrop-blur-xl pt-4" : ""}
+    ${isOpen ? "bg-white shadow-lg" : ""}
+  `}
       >
         {/* Logo */}
         <div className="text-black font-bold text-lg flex items-center">

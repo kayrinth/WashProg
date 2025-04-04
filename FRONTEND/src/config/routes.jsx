@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { HomePage, MenuPage } from "../pages";
+import { HomePage, MenuPage, OrderPage } from "../pages";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -8,5 +8,9 @@ export const router = createBrowserRouter([
   {
     path: "/menu",
     element: <MenuPage />,
+  },
+  {
+    path: "/pesan",
+    element: <OrderPage />,
   },
 ]);

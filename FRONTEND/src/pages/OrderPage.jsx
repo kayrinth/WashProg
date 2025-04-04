@@ -1,0 +1,13 @@
+import Header from "../components/templates/header";
+import { Order } from "../components/organism";
+import Footer from "../components/templates/footer";
+
+export default function MenuPage() {
+  return (
+    <>
+      <Header />
+      <Order />
+      <Footer />
+    </>
+  );
+}
