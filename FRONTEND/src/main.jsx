@@ -9,6 +9,8 @@ import {
   faFacebook,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 library.add(faTwitter, faFacebook, faInstagram);
 
@@ -19,5 +21,6 @@ const MainApp = () => {
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <MainApp />
+    <ToastContainer />
   </StrictMode>
 );

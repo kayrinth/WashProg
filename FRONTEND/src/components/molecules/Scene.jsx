@@ -23,7 +23,7 @@ const MenuBoard = () => {
     /* eslint-disable */
     <group ref={groupRef} scale={[scaleFactor, scaleFactor, scaleFactor]}>
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[25, 40, 0.2]} />
+        <boxGeometry args={[23, 40.5, 0.2]} />
         <meshStandardMaterial
           color="#000"
           metalness={1}
@@ -34,7 +34,7 @@ const MenuBoard = () => {
       </mesh>
 
       <mesh position={[0, 0, 0.2]}>
-        <planeGeometry args={[25, 40]} />
+        <planeGeometry args={[22.5, 40]} />
         <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
       </mesh>
     </group>

@@ -12,6 +12,9 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
+import "leaflet-control-geocoder";
+import "leaflet-control-geocoder/dist/Control.Geocoder.js";
+import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 
 const markerIcon = L.icon({
   iconUrl: markerIconPng,
@@ -37,6 +40,7 @@ function MapClickHandler({ onMapClick }) {
     click: async (e) => {
       const { lat, lng } = e.latlng;
       console.log("Koordinat yang diklik:", lat, lng);
+
       if (onMapClick) {
         onMapClick({ lat, lng });
       } else {
@@ -57,6 +61,22 @@ function RecenterMap({ position }) {
   return null;
 }
 
+const SearchControl = () => {
+  const map = useMap();
+
+  useEffect(() => {
+    const geocoder = L.Control.geocoder({
+      defaultMarkGeocode: true,
+    }).addTo(map);
+
+    return () => {
+      map.removeControl(geocoder);
+    };
+  }, [map]);
+
+  return null;
+};
+
 const MapComponent = () => {
   const fixedPosition = {
     lat: -7.7544068241818485,
@@ -66,7 +86,7 @@ const MapComponent = () => {
   const [userPosition, setUserPosition] = useState(null);
   const [fixedAddress, setFixedAddress] = useState("Mendeteksi alamat...");
   const [userAddress, setUserAddress] = useState("Mendeteksi lokasi Anda...");
-  const ZOOM_LEVEL = 15;
+  const ZOOM_LEVEL = 17;
 
   const getAddressFromCoords = async (lat, lng) => {
     try {
@@ -84,6 +104,10 @@ const MapComponent = () => {
   const handleMapClick = async (position) => {
     setUserPosition(position);
     const address = await getAddressFromCoords(position.lat, position.lng);
+    // console.log(
+    //   "Lokasi yang diklik:",
+    //   await getAddressFromCoords(position.lat, position.lng)
+    // );
     setUserAddress(address);
   };
 
@@ -151,6 +175,7 @@ const MapComponent = () => {
             </Popup>
           </Marker>
         )}
+        <SearchControl />
       </MapContainer>
     </div>
   );

@@ -48,9 +48,18 @@ const userController = {
   },
 
   // **Login User**
+  // controllers/authController.js
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
+
+      // Validasi input
+      if (!email || !password) {
+        return next({
+          name: errorName.BAD_REQUEST,
+          message: "Email dan password harus diisi",
+        });
+      }
 
       const user = await User.findOne({ email });
       if (!user) {
@@ -75,8 +84,16 @@ const userController = {
         { expiresIn: env.jwtExpiresIn }
       );
 
-      return ResponseAPI.success(res, { token });
+      // Kirim response dengan token dan data user
+      return ResponseAPI.success(res, {
+        token,
+        user: {
+          name: user.name,
+          email: user.email,
+        },
+      });
     } catch (error) {
+      console.error("Login Error:", error);
       next(error);
     }
   },

@@ -13,7 +13,7 @@ export default function Home3() {
           </p>
         </div>
         <a
-          href="#"
+          href="/pesan"
           className="mt-10 inline-block bg-black hover:opacity-50 text-white text-xl md:text-2xl xl:text-3xl font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
         >
           Coba Sekarang!!

@@ -1,17 +1,26 @@
 import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import { logo } from "../../assets";
-import { FcGoogle } from "react-icons/fc";
-import { Input } from "../atoms"; // Perbaikan import komponen Input
+// import { FcGoogle } from "react-icons/fc";
+// import { Input } from "../atoms";
+import { LoginForm, RegisterForm } from "../molecules";
+import useAuthStore from "../../stores/useAuthStore";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [registerData, setRegisterData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
   });
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,14 +34,22 @@ export default function Header() {
     console.log("Login dengan Google...");
   };
 
-  const onClose = () => {
-    setIsLoginOpen(false);
-  };
+  // const onClose = () => {
+  //   setIsLoginOpen(false);
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setLoginData((prevData) => ({
       ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleRegisterInputChange = (e) => {
+    const { name, value } = e.target;
+    setRegisterData((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
@@ -58,7 +75,7 @@ export default function Header() {
           <a href="/menu" className="hover:text-gray-600">
             Daftar Menu
           </a>
-          <a href="#" className="hover:text-gray-600">
+          <a href="/pesan" className="hover:text-gray-600">
             Pesan Sekarang
           </a>
           <a href="#" className="hover:text-gray-600">
@@ -88,85 +105,56 @@ export default function Header() {
             <a href="/menu" className="hover:text-gray-600">
               Daftar Menu
             </a>
-            <a href="#" className="hover:text-gray-600">
+            <a href="/pesan" className="hover:text-gray-600">
               Pesan Sekarang
             </a>
             <a href="#" className="hover:text-gray-600">
               Tentang Kami
             </a>
-            <button
-              className="bg-[#FF8225] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
-              onClick={() => setIsLoginOpen(true)}
-            >
-              Login
-            </button>
+            {user ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-800">
+                  Halo, {user.name}
+                </span>
+                {/* <button
+                  onClick={logout}
+                  className="text-red-500 text-sm hover:underline"
+                >
+                  Logout
+                </button> */}
+              </div>
+            ) : (
+              <button
+                className="bg-[#FF8225] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
+                onClick={() => setIsLoginOpen(true)}
+              >
+                Login
+              </button>
+            )}
           </div>
         )}
       </header>
 
       {/* Login Popup */}
       {isLoginOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-            {/* Logo */}
-            <img
-              src={logo}
-              alt="WashProg Logo"
-              className="w-28 md:w-36 xl:w-48 mx-auto mb-4"
-            />
+        <LoginForm
+          loginData={loginData}
+          handleInputChange={handleInputChange}
+          onGoogleSignIn={onGoogleSignIn}
+          onClose={() => setIsLoginOpen(false)}
+          openRegister={() => {
+            setIsLoginOpen(false);
+            setIsRegisterOpen(true);
+          }}
+        />
+      )}
 
-            {/* Judul */}
-            <h2 className="text-xl font-semibold mb-4">Login</h2>
-
-            {/* Input Username */}
-            <Input
-              type="text"
-              name="username"
-              value={loginData.username}
-              placeholder="Username"
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded mb-2"
-            />
-
-            {/* Input Password */}
-            <Input
-              type="password"
-              name="password"
-              value={loginData.password}
-              placeholder="Password"
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded mb-2"
-            />
-
-            {/* Tombol Login */}
-            <button className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800 mb-2">
-              Masuk
-            </button>
-            <button className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800">
-              Registrasi
-            </button>
-
-            {/* Atau Login dengan */}
-            <div className="my-4 text-gray-500">Atau</div>
-
-            {/* Tombol Login dengan Google */}
-            <button
-              className="flex items-center justify-center w-full border rounded-md py-2 hover:bg-gray-100"
-              onClick={onGoogleSignIn}
-            >
-              <FcGoogle className="text-2xl mr-2" />
-              <span>Google</span>
-            </button>
-
-            {/* Tombol Batal */}
-            <button
-              className="text-gray-500 hover:text-gray-700 mt-4"
-              onClick={onClose}
-            >
-              Batal
-            </button>
-          </div>
-        </div>
+      {isRegisterOpen && (
+        <RegisterForm
+          registerData={registerData}
+          handleChange={handleRegisterInputChange}
+          onClose={() => setIsRegisterOpen(false)}
+        />
       )}
     </>
   );

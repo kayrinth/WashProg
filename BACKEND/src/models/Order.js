@@ -33,6 +33,14 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    lat: {
+      type: Number,
+      required: true,
+    },
+    lng: {
+      type: Number,
+      required: true,
+    },
     deletedAt: {
       type: Date,
       required: false,

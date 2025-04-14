@@ -1,8 +1,13 @@
 const Osm = {
-  maptiler: {
-    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  hot: {
+    url: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
     attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      "&copy; OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team",
+  },
+  maptiler: {
+    url: "https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=YOUR_API_KEY",
+    attribution:
+      '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a>',
   },
 };
 

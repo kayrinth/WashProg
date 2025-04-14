@@ -5,19 +5,27 @@ const oauth2Client = require("./config/googleAuth");
 const route = require("./routes");
 const jwt = require("jsonwebtoken");
 const { google } = require("googleapis");
+const cors = require("cors");
 
 require("dotenv").config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-// Definisikan scopes terlebih dahulu
+// Google OAuth scopes
 const scopes = [
   "https://www.googleapis.com/auth/userinfo.email",
   "https://www.googleapis.com/auth/userinfo.profile",
 ];
 
-// Kemudian gunakan dalam generateAuthUrl
 const authorizationUrl = oauth2Client.generateAuthUrl({
   access_type: "offline",
   scope: scopes,

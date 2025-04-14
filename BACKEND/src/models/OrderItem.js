@@ -11,6 +11,10 @@ const orderItemSchema = new mongoose.Schema({
     ref: "Service",
     required: true,
   },
+  items: {
+    type: String,
+    required: true,
+  },
   quantity: { type: Number, required: true, min: 1 },
   subTotal: { type: Number, required: true },
 });
