@@ -8,16 +8,23 @@ export default function Menu() {
   const [selectedService, setSelectedService] = useState(null);
   const [inputName, setInputName] = useState("");
   const [showReceipt, setShowReceipt] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+
+  const handleCategorySelect = (categoryId) => {
+    setSelectedCategoryId(categoryId);
+  };
 
   const handleAddToCart = () => {
     if (!selectedService || inputName.trim() === "") return;
 
-    const uniqueKey = `${selectedService.id}-${inputName.trim().toLowerCase()}`;
+    const uniqueKey = `${selectedService._id}-${inputName
+      .trim()
+      .toLowerCase()}`;
 
     const serviceToAdd = {
       key: uniqueKey,
-      id: selectedService.id,
-      name: `${selectedService.name} (${inputName})`,
+      id: selectedService._id,
+      name: `${selectedService.title} (${inputName})`,
     };
 
     setCartItems((prevItems) => {
@@ -35,7 +42,11 @@ export default function Menu() {
 
     // Reset form
     setInputName("");
-    // setSelectedService(null);
+    // setSelectedService(null); // Uncomment jika Anda ingin reset seleksi setelah menambahkan
+  };
+
+  const handleRemoveFromCart = (key) => {
+    setCartItems((prevItems) => prevItems.filter((item) => item.key !== key));
   };
 
   return (
@@ -71,8 +82,11 @@ export default function Menu() {
           </div>
 
           <div className="space-y-6">
-            <SelectCategory />
-            <SelectService onSelectService={setSelectedService} />
+            <SelectCategory onCategorySelect={handleCategorySelect} />
+            <SelectService
+              categoryId={selectedCategoryId}
+              onAddToCart={(service) => setSelectedService(service)}
+            />
             <InputNameItems inputName={inputName} setInputName={setInputName} />
 
             <div className="pt-4">
@@ -116,13 +130,28 @@ export default function Menu() {
 
             <div className="space-y-2 mb-4">
               {cartItems.map((item, index) => (
-                <div key={index} className="flex justify-between">
-                  <span>{item.name}</span>
-                  <span>x {item.quantity}</span>
+                <div key={index} className="flex items-center justify-between">
+                  <span className="flex-grow">{item.name}</span>
+                  <div className="flex items-center gap-2">
+                    <span>x {item.quantity}</span>
+                    <button
+                      onClick={() => handleRemoveFromCart(item.key)}
+                      className="text-red-500 hover:bg-red-100 rounded-full w-6 h-6 flex items-center justify-center"
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
               ))}
 
               <MapComponent />
+              <input
+                type="text"
+                name=""
+                id=""
+                placeholder="Masukan Detail Alamat"
+                className="w-full p-2 border rounded"
+              />
             </div>
 
             <div className="flex justify-between mt-4 sticky bottom-0 bg-white pt-4">

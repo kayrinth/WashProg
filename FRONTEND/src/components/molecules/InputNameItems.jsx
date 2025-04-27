@@ -5,7 +5,7 @@ export default function InputNameItems({ inputName, setInputName }) {
   return (
     <>
       <label className="block text-gray-700 font-medium mb-2 text-sm uppercase tracking-wider">
-        Pilih Layanan
+        Masukan Detail Barang
       </label>
 
       <Input
