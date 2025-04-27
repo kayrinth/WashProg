@@ -48,11 +48,11 @@ const serviceController = {
   async getByCategory(req, res, next) {
     try {
       const { categoryId } = req.params;
+
       const services = await Service.find({ categoryId: categoryId })
         .populate("categoryId", "title")
-        .sort({
-          createdAt: -1,
-        });
+        .sort({ createdAt: -1 });
+
       ResponseAPI.success(res, services);
     } catch (error) {
       next(error);

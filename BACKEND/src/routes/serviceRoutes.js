@@ -6,7 +6,7 @@ const { serviceController } = require("../controller");
 serviceRoutes.post("/service/create", serviceController.create);
 serviceRoutes.get("/services", verifyToken, serviceController.getAll);
 serviceRoutes.get(
-  "/service/category/:category",
+  "/service/category/:categoryId",
   serviceController.getByCategory
 );
 serviceRoutes.put("/service/update/:id", serviceController.update);

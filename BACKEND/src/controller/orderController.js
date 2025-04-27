@@ -7,7 +7,7 @@ require("dotenv").config();
 const orderController = {
   async create(req, res, next) {
     try {
-      const { services, userId, address } = req.body;
+      const { services, userId, address, lat, lng } = req.body;
 
       let totalPrice = 0;
       let orderItems = [];
@@ -24,6 +24,8 @@ const orderController = {
       let order = new Order({
         userId,
         status: "menunggu",
+        lat,
+        lng,
         address,
         dateOrder: new Date(),
         totalPrice: 0,
@@ -47,6 +49,7 @@ const orderController = {
           services: service.serviceId,
           quantity: service.quantity,
           subTotal,
+          items: service.items,
         });
 
         // Simpan OrderItem
@@ -61,7 +64,6 @@ const orderController = {
       order.totalPrice = totalPrice;
       await order.save();
 
-      // Untuk response lebih lengkap, bisa populate itemsId
       const populatedOrder = await Order.findById(order._id)
         .populate("userId", "name")
         .populate({
@@ -72,7 +74,6 @@ const orderController = {
           },
         });
 
-      // Mengirim response sukses dengan data order
       ResponseAPI.success(res, populatedOrder);
     } catch (error) {
       console.error("Error dalam create order:", error);
