@@ -116,12 +116,12 @@ export default function Header() {
                 <span className="text-sm font-medium text-gray-800">
                   Halo, {user.name}
                 </span>
-                {/* <button
+                <button
                   onClick={logout}
                   className="text-red-500 text-sm hover:underline"
                 >
                   Logout
-                </button> */}
+                </button>
               </div>
             ) : (
               <button

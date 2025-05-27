@@ -87,6 +87,7 @@ const userController = {
       // Kirim response dengan token dan data user
       return ResponseAPI.success(res, {
         token,
+        userId: user._id,
         user: {
           name: user.name,
           email: user.email,

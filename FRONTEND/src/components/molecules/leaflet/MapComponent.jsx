@@ -77,7 +77,7 @@ const SearchControl = () => {
   return null;
 };
 
-const MapComponent = () => {
+const MapComponent = ({ onLocationSelect }) => {
   const fixedPosition = {
     lat: -7.7544068241818485,
     lng: 110.4092258951068,
@@ -104,11 +104,10 @@ const MapComponent = () => {
   const handleMapClick = async (position) => {
     setUserPosition(position);
     const address = await getAddressFromCoords(position.lat, position.lng);
-    // console.log(
-    //   "Lokasi yang diklik:",
-    //   await getAddressFromCoords(position.lat, position.lng)
-    // );
     setUserAddress(address);
+    if (onLocationSelect) {
+      onLocationSelect(position);
+    }
   };
 
   // Mendapatkan alamat untuk lokasi fixed dan lokasi pengguna saat komponen pertama kali dimuat
@@ -128,10 +127,14 @@ const MapComponent = () => {
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           const { latitude, longitude } = pos.coords;
-          setUserPosition({ lat: latitude, lng: longitude });
+          const userPos = { lat: latitude, lng: longitude };
+          setUserPosition(userPos);
           const address = await getAddressFromCoords(latitude, longitude);
           setUserAddress(address);
           console.log("Lokasi pengguna:", latitude, longitude);
+          if (onLocationSelect) {
+            onLocationSelect(userPos);
+          }
         },
         (err) => {
           console.error("Geolocation error:", err);
@@ -141,7 +144,7 @@ const MapComponent = () => {
     } else {
       setUserAddress("Browser tidak mendukung geolokasi");
     }
-  }, []);
+  }, [onLocationSelect]); // ✅ Tambah onLocationSelect ke dependency
 
   return (
     <div className="w-full h-[300px] rounded-lg overflow-hidden border border-gray-300">
@@ -177,8 +180,17 @@ const MapComponent = () => {
         )}
         <SearchControl />
       </MapContainer>
+
+      <p className="text-sm text-gray-600 mt-2">
+        💡 Klik pada peta untuk memilih lokasi pengantaran
+      </p>
     </div>
   );
+};
+
+// ✅ PropTypes untuk MapComponent setelah deklarasi
+MapComponent.propTypes = {
+  onLocationSelect: PropTypes.func,
 };
 
 export default MapComponent;

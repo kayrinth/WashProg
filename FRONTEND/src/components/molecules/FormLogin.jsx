@@ -26,12 +26,13 @@ export default function LoginForm({
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Login gagal");
 
-      const { token, user } = data.data;
+      const { token, user, userId } = data.data;
 
       setUser(
         {
           email: user.email,
           name: user.name,
+          userId: userId,
         },
         token
       );

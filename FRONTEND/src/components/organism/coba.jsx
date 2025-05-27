@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SelectCategory, SelectService, InputNameItems } from "../molecules";
+import MapComponent from "../molecules/leaflet/MapComponent";
 import { order } from "../../assets";
 import { useNavigate } from "react-router-dom";
 
@@ -7,26 +8,9 @@ export default function Menu() {
   const [cartItems, setCartItems] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
   const [inputName, setInputName] = useState("");
+  // const [showReceipt, setShowReceipt] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const savedCartItems = localStorage.getItem("cartItems");
-    if (savedCartItems) {
-      try {
-        const parsedItems = JSON.parse(savedCartItems);
-        setCartItems(parsedItems);
-      } catch (error) {
-        console.error("Tidak bisa parsing items:", error);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    }
-  }, [cartItems]);
 
   const handleCategorySelect = (categoryId) => {
     setSelectedCategoryId(categoryId);
@@ -43,29 +27,31 @@ export default function Menu() {
       key: uniqueKey,
       id: selectedService._id,
       name: `${selectedService.title} (${inputName})`,
-      price: selectedService.price,
     };
 
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.key === uniqueKey);
-      let newItems;
-
       if (existingItem) {
-        newItems = prevItems.map((item) =>
+        return prevItems.map((item) =>
           item.key === uniqueKey
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        newItems = [...prevItems, { ...serviceToAdd, quantity: 1 }];
+        return [...prevItems, { ...serviceToAdd, quantity: 1 }];
       }
-      localStorage.setItem("cartItems", JSON.stringify(newItems));
-      return newItems;
     });
+
+    // Reset form
+    setInputName("");
+    // setSelectedService(null); // Uncomment jika Anda ingin reset seleksi setelah menambahkan
+  };
+
+  const handleRemoveFromCart = (key) => {
+    setCartItems((prevItems) => prevItems.filter((item) => item.key !== key));
   };
 
   const handleClick = () => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
     navigate("/receipt");
   };
 
@@ -75,7 +61,7 @@ export default function Menu() {
       <div
         className="relative w-full h-96 flex items-center justify-center text-white"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6)), url(${order})`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${order})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
@@ -133,17 +119,69 @@ export default function Menu() {
                 </p>
               ))}
             </div>
-            <div>
+            <button
+              // onClick={() => setShowReceipt(true)}
+              onClick={handleClick}
+              className="bg-[#FF8225] text-white px-4 py-2 rounded-lg shadow-md"
+            >
+              Checkout
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* {showReceipt && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
+          <div className="bg-white rounded-xl max-h-[90vh] max-w-md w-full shadow-2xl relative mx-4 overflow-y-auto p-6">
+            <h3 className="text-xl font-bold mb-4 text-center">Nota Pesanan</h3>
+
+            <div className="space-y-2 mb-4">
+              {cartItems.map((item, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  <span className="flex-grow">{item.name}</span>
+                  <div className="flex items-center gap-2">
+                    <span>x {item.quantity}</span>
+                    <button
+                      onClick={() => handleRemoveFromCart(item.key)}
+                      className="text-red-500 hover:bg-red-100 rounded-full w-6 h-6 flex items-center justify-center"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              <MapComponent />
+              <input
+                type="text"
+                name=""
+                id=""
+                placeholder="Masukan Detail Alamat"
+                className="w-full p-2 border rounded"
+              />
+            </div>
+
+            <div className="flex justify-between mt-4 sticky bottom-0 bg-white pt-4">
               <button
-                onClick={handleClick}
-                className="bg-[#FF8225] text-white px-4 py-2 rounded-lg shadow-md"
+                onClick={() => setShowReceipt(false)}
+                className="text-sm text-gray-600 hover:underline"
               >
-                Checkout
+                Kembali
+              </button>
+              <button
+                onClick={() => {
+                  alert("Pesanan berhasil dikonfirmasi!");
+                  setCartItems([]);
+                  setShowReceipt(false);
+                }}
+                className="bg-[#FF8225] text-white px-4 py-2 rounded-lg"
+              >
+                Konfirmasi
               </button>
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

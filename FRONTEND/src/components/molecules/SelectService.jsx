@@ -38,7 +38,7 @@ export default function SelectService({ categoryId, onAddToCart }) {
 
   const serviceOptions = services.map((service) => ({
     value: service._id,
-    label: service.title,
+    label: `${service.title} - Rp ${service.price.toLocaleString("id-ID")}`,
   }));
 
   const handleChange = (e) => {
