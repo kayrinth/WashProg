@@ -1,26 +1,30 @@
+// components/Header.jsx
 import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import { logo } from "../../assets";
-// import { FcGoogle } from "react-icons/fc";
-// import { Input } from "../atoms";
 import { LoginForm, RegisterForm } from "../molecules";
 import useAuthStore from "../../stores/useAuthStore";
+import { useLoginModal } from "../../stores/loginLogoutModal";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [registerData, setRegisterData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [loginData, setLoginData] = useState({
-    username: "",
-    password: "",
-  });
   const user = useAuthStore((state) => state.user);
+
+  const {
+    isLoginOpen,
+    isRegisterOpen,
+    loginData,
+    registerData,
+    openLogin,
+    openRegister,
+    closeAllModals,
+    handleLoginInputChange,
+    handleRegisterInputChange,
+    handlePesanClick,
+    onGoogleSignIn,
+    logout,
+  } = useLoginModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,30 +33,6 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const onGoogleSignIn = () => {
-    console.log("Login dengan Google...");
-  };
-
-  // const onClose = () => {
-  //   setIsLoginOpen(false);
-  // };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setLoginData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleRegisterInputChange = (e) => {
-    const { name, value } = e.target;
-    setRegisterData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   return (
     <>
@@ -75,7 +55,11 @@ export default function Header() {
           <a href="/menu" className="hover:text-gray-600">
             Daftar Menu
           </a>
-          <a href="/pesan" className="hover:text-gray-600">
+          <a
+            href="#"
+            onClick={handlePesanClick}
+            className="hover:text-gray-600"
+          >
             Pesan Sekarang
           </a>
           <a href="#" className="hover:text-gray-600">
@@ -83,13 +67,26 @@ export default function Header() {
           </a>
         </nav>
 
-        {/* Login Button */}
-        <button
-          className="hidden md:block bg-[#FF8225] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
-          onClick={() => setIsLoginOpen(true)}
-        >
-          Login
-        </button>
+        {user ? (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-800">
+              Halo, {user.name}
+            </span>
+            <button
+              onClick={logout}
+              className="text-red-500 text-sm hover:underline"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            className="bg-[#FF8225] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
+            onClick={openLogin}
+          >
+            Login
+          </button>
+        )}
 
         {/* Mobile Menu Button */}
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
@@ -105,7 +102,11 @@ export default function Header() {
             <a href="/menu" className="hover:text-gray-600">
               Daftar Menu
             </a>
-            <a href="/pesan" className="hover:text-gray-600">
+            <a
+              href="#"
+              onClick={handlePesanClick}
+              className="hover:text-gray-600"
+            >
               Pesan Sekarang
             </a>
             <a href="#" className="hover:text-gray-600">
@@ -117,7 +118,7 @@ export default function Header() {
                   Halo, {user.name}
                 </span>
                 <button
-                  onClick={logout}
+                  // onClick={logout}
                   className="text-red-500 text-sm hover:underline"
                 >
                   Logout
@@ -126,7 +127,7 @@ export default function Header() {
             ) : (
               <button
                 className="bg-[#FF8225] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
-                onClick={() => setIsLoginOpen(true)}
+                onClick={openLogin}
               >
                 Login
               </button>
@@ -139,13 +140,10 @@ export default function Header() {
       {isLoginOpen && (
         <LoginForm
           loginData={loginData}
-          handleInputChange={handleInputChange}
+          handleInputChange={handleLoginInputChange}
           onGoogleSignIn={onGoogleSignIn}
-          onClose={() => setIsLoginOpen(false)}
-          openRegister={() => {
-            setIsLoginOpen(false);
-            setIsRegisterOpen(true);
-          }}
+          onClose={closeAllModals}
+          openRegister={openRegister}
         />
       )}
 
@@ -153,7 +151,7 @@ export default function Header() {
         <RegisterForm
           registerData={registerData}
           handleChange={handleRegisterInputChange}
-          onClose={() => setIsRegisterOpen(false)}
+          onClose={closeAllModals}
         />
       )}
     </>

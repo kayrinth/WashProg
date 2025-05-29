@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import MapComponent from "../molecules/leaflet/MapComponent";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
+import LoadingOverlay from "../templates/loading";
+import SuccessModal from "../templates/success";
+import ErrorModal from "../templates/error";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -11,7 +14,8 @@ export default function Receipt() {
   const [loadingData, setLoadingData] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedLatLng, setSelectedLatLng] = useState(null);
-  const navigate = useNavigate();
+  const [orderStatus, setOrderStatus] = useState(null);
+  // const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -45,7 +49,9 @@ export default function Receipt() {
   };
 
   const handleConfirmOrder = async () => {
-    // ✅ Validasi koordinat sebelum mengirim
+    setIsSubmitting(true);
+    setOrderStatus(null);
+
     if (!selectedLatLng) {
       alert("Silakan pilih lokasi pada peta terlebih dahulu");
       return;
@@ -53,9 +59,6 @@ export default function Receipt() {
 
     const token = localStorage.getItem("token");
     const userString = localStorage.getItem("auth");
-
-    // ✅ Debug dan perbaiki pengambilan userId
-    console.log("Raw user string:", userString);
 
     let userId = null;
     if (userString) {
@@ -90,13 +93,10 @@ export default function Receipt() {
       userId,
       services,
       address,
-      latLng: selectedLatLng, // ✅ Gunakan koordinat yang dipilih dari peta
+      lat: selectedLatLng.lat,
+      lng: selectedLatLng.lng,
+      latLng: selectedLatLng,
     };
-
-    console.log("=== Data yang dikirim ke backend ===");
-    console.log(JSON.stringify(orderData, null, 2));
-
-    setIsSubmitting(true);
 
     try {
       const res = await fetch(`${API_BASE_URL}/order`, {
@@ -112,16 +112,15 @@ export default function Receipt() {
         const errorData = await res.json();
         throw new Error(errorData.message || "Gagal mengkonfirmasi pesanan");
       }
-
-      alert("Pesanan berhasil dikonfirmasi!");
+      //mendelay pesanan
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      //menampilkan modal
+      setOrderStatus("success");
       setCartItems([]);
       localStorage.removeItem("cartItems");
-      setTimeout(() => {
-        navigate("/");
-      }, 800);
     } catch (error) {
       console.error("Receipt - Error confirming order:", error);
-      alert(error.message);
+      setOrderStatus("error");
     } finally {
       setIsSubmitting(false);
     }
@@ -175,7 +174,6 @@ export default function Receipt() {
       )}
 
       <div className="mt-6">
-        {/* ✅ Pass handler ke MapComponent untuk menerima koordinat */}
         <MapComponent onLocationSelect={handleLocationSelect} />
         <input
           type="text"
@@ -184,14 +182,6 @@ export default function Receipt() {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
-
-        {/* ✅ Tampilkan koordinat yang dipilih */}
-        {selectedLatLng && (
-          <p className="text-sm text-gray-600 mt-2">
-            Koordinat: {selectedLatLng.lat.toFixed(6)},{" "}
-            {selectedLatLng.lng.toFixed(6)}
-          </p>
-        )}
       </div>
 
       <div className="flex justify-between mt-6">
@@ -201,17 +191,38 @@ export default function Receipt() {
         >
           Kembali
         </button>
-        <button
-          onClick={handleConfirmOrder}
-          className={`px-4 py-2 rounded-lg text-white ${
-            isSubmitting || cartItems.length === 0 || !selectedLatLng
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-[#FF8225] hover:bg-[#e9741f]"
-          }`}
-          disabled={isSubmitting || cartItems.length === 0 || !selectedLatLng}
-        >
-          {isSubmitting ? "Mengirim..." : "Konfirmasi"}
-        </button>
+        <div>
+          <button
+            onClick={handleConfirmOrder}
+            className={`px-4 py-2 rounded-lg text-white ${
+              isSubmitting || cartItems.length === 0 || !selectedLatLng
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#FF8225] hover:bg-[#e9741f]"
+            }`}
+            disabled={isSubmitting || cartItems.length === 0 || !selectedLatLng}
+          >
+            {isSubmitting ? "Konfirmasi" : "Konfirmasi"}
+          </button>
+
+          {isSubmitting && <LoadingOverlay />}
+
+          {orderStatus === "success" && (
+            <SuccessModal
+              onClose={() => setOrderStatus(null)}
+              title="Pesanan Berhasil Dikirim!"
+              message="Pesanan Anda telah berhasil diterima dan sedang diproses."
+            />
+          )}
+
+          {orderStatus === "error" && (
+            <ErrorModal
+              onClose={() => setOrderStatus(null)}
+              onRetry={handleConfirmOrder}
+              title="Gagal Mengirim Pesanan"
+              message="Terjadi kesalahan saat mengirim pesanan. Silakan coba lagi."
+            />
+          )}
+        </div>
       </div>
     </div>
   );
