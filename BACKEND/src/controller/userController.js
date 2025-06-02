@@ -175,7 +175,6 @@ const userController = {
       let user = await User.findOne({ email: data.email });
 
       if (!user) {
-        // Create new user if doesn't exist
         user = await User.create({
           name: data.name,
           email: data.email,
@@ -184,7 +183,6 @@ const userController = {
           profilePicture: data.picture || "",
         });
       } else if (user.authType === "local") {
-        // Link Google account to existing local account
         user.googleId = data.id;
         user.profilePicture = user.profilePicture || data.picture;
         await user.save();
@@ -199,22 +197,26 @@ const userController = {
         }
       );
 
-      // Option 1: Redirect to frontend with token in URL
-      // res.redirect(`http://localhost:3000/auth/success?token=${token}`);
+      const userData = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePicture: user.profilePicture,
+      };
 
-      // Option 2: Return token as JSON
-      res.json({
-        message: "Google login successful",
-        token,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          profilePicture: user.profilePicture,
-        },
-      });
+      // **REDIRECT ke frontend dengan data di URL**
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+      const redirectUrl = `${frontendUrl}/auth/success?token=${encodeURIComponent(
+        token
+      )}&user=${encodeURIComponent(JSON.stringify(userData))}`;
+
+      res.redirect(redirectUrl);
     } catch (error) {
-      next(error);
+      console.error("Google callback error:", error);
+      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+      res.redirect(
+        `${frontendUrl}/auth/error?message=${encodeURIComponent("Login gagal")}`
+      );
     }
   },
 
