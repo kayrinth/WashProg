@@ -1,5 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
-import { HomePage, MenuPage, OrderPage, ReceiptPage } from "../pages";
+import {
+  HomePage,
+  MenuPage,
+  OrderPage,
+  ReceiptPage,
+  AuthSuccess,
+} from "../pages";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -20,5 +26,9 @@ export const router = createBrowserRouter([
   {
     path: "*",
     element: <h1>404</h1>,
+  },
+  {
+    path: "/auth/success",
+    element: <AuthSuccess />,
   },
 ]);

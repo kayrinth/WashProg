@@ -5,11 +5,11 @@ import { FcGoogle } from "react-icons/fc";
 import useAuthStore from "../../stores/useAuthStore";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function LoginForm({
   loginData,
   handleInputChange,
-  onGoogleSignIn,
   onClose,
   openRegister,
 }) {
@@ -17,7 +17,7 @@ export default function LoginForm({
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/v1/user/login", {
+      const res = await fetch(`${API_BASE_URL}/user/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
@@ -45,6 +45,17 @@ export default function LoginForm({
     } catch (err) {
       console.error("Login error:", err.message);
       toast.error("Login gagal!");
+    }
+  };
+
+  const handleLoginGoogle = () => {
+    try {
+      sessionStorage.setItem("loginAttempt", "google");
+      toast.info("Mengarahkan ke Google...");
+      window.location.href = `${API_BASE_URL}/user/google/login`;
+    } catch (error) {
+      console.error("Error initiating Google login:", error);
+      toast.error("Gagal memulai login Google");
     }
   };
 
@@ -88,7 +99,7 @@ export default function LoginForm({
 
         <button
           className="flex items-center justify-center w-full border rounded-md py-2 hover:bg-gray-100"
-          onClick={onGoogleSignIn}
+          onClick={handleLoginGoogle}
         >
           <FcGoogle className="text-2xl mr-2" />
           <span>Google</span>
