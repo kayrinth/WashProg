@@ -3,7 +3,7 @@ import { SelectCategory, SelectService, InputNameItems } from "../molecules";
 import { order } from "../../assets";
 import { useNavigate } from "react-router-dom";
 
-export default function Menu() {
+export default function Order() {
   const [cartItems, setCartItems] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
   const [inputName, setInputName] = useState("");

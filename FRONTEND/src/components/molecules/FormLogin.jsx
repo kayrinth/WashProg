@@ -30,7 +30,7 @@ export default function LoginForm({
 
       setUser(
         {
-          email: user.email,
+          phoneNumber: user.phoneNumber,
           name: user.name,
           userId: userId,
         },
@@ -38,7 +38,7 @@ export default function LoginForm({
       );
       toast.success("Login berhasil!");
 
-      handleInputChange({ target: { name: "email", value: "" } });
+      handleInputChange({ target: { name: "phoneNumber", value: "" } });
       handleInputChange({ target: { name: "password", value: "" } });
 
       onClose();
@@ -67,9 +67,9 @@ export default function LoginForm({
 
         <Input
           type="text"
-          name="email"
-          value={loginData.email}
-          placeholder="Email"
+          name="phoneNumber"
+          value={loginData.phoneNumber}
+          placeholder="Nomor Whatsapp"
           onChange={handleInputChange}
           className="w-full p-2 border rounded mb-2"
         />
@@ -118,7 +118,7 @@ export default function LoginForm({
 
 LoginForm.propTypes = {
   loginData: PropTypes.shape({
-    email: PropTypes.string.isRequired,
+    phoneNumber: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,

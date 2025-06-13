@@ -81,13 +81,12 @@ export default function Header() {
           </div>
         ) : (
           <button
-            className="bg-[#FF8225] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
+            className="bg-[#FF8225] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50 hidden md:flex items-center"
             onClick={openLogin}
           >
             Login
           </button>
         )}
-
         {/* Mobile Menu Button */}
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
           <Menu size={28} />
