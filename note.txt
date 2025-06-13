@@ -1,1 +1,2 @@
-1. masih kurang mendapatkan lat lng dan user id masih null pada menu order
+1. menambahkan tanggal kirim atau button
+2. mengirimkan link ke google maps setelah berhasil tampil di maps
