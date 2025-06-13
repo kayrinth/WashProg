@@ -13,9 +13,9 @@ const userController = {
   // **Register User**
   async register(req, res, next) {
     try {
-      const { name, email, phoneNumber, password } = req.body;
+      const { name, phoneNumber, password } = req.body;
 
-      const findUser = await User.findOne({ email });
+      const findUser = await User.findOne({ phoneNumber });
 
       if (findUser) {
         return next({
@@ -28,7 +28,6 @@ const userController = {
 
       const newUser = await User.create({
         name,
-        email,
         password: hashedPassword,
         phoneNumber,
         joinAt: new Date(),
@@ -38,7 +37,6 @@ const userController = {
         user: {
           id: newUser._id,
           name: newUser.name,
-          email: newUser.email,
           phoneNumber: newUser.phoneNumber,
         },
       });
@@ -51,17 +49,17 @@ const userController = {
   // controllers/authController.js
   async login(req, res, next) {
     try {
-      const { email, password } = req.body;
+      const { phoneNumber, password } = req.body;
 
       // Validasi input
-      if (!email || !password) {
+      if (!phoneNumber || !password) {
         return next({
           name: errorName.BAD_REQUEST,
-          message: "Email dan password harus diisi",
+          message: "nomor Whatsapp dan password harus diisi",
         });
       }
 
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ phoneNumber });
       if (!user) {
         return next({
           name: errorName.NOT_FOUND,
@@ -77,9 +75,8 @@ const userController = {
         });
       }
 
-      // Generate JWT token
       const token = jwt.sign(
-        { id: user._id, email: user.email },
+        { id: user._id, phoneNumber: user.phoneNumber },
         env.jwtSecret,
         { expiresIn: env.jwtExpiresIn }
       );
@@ -90,7 +87,7 @@ const userController = {
         userId: user._id,
         user: {
           name: user.name,
-          email: user.email,
+          phoneNumber: user.phoneNumber,
         },
       });
     } catch (error) {

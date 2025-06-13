@@ -2,6 +2,7 @@ const fs = require("fs");
 const ResponseAPI = require("../utils/response");
 const { Order, OrderItem, Service } = require("../models");
 const { errorMsg, errorName } = require("../utils/errorMiddlewareMsg");
+const { getAll } = require("./userController");
 require("dotenv").config();
 
 const orderController = {
@@ -81,14 +82,31 @@ const orderController = {
     }
   },
 
+  // async getAll(req, res, next) {
+  //   try {
+  //     if (req.user?.role === "admin") {
+  //       const orders = await Order.find().populate("services", "title");
+  //       ResponseAPI.success(res, orders);
+  //     } else {
+  //       return res.status(403).json({ message: "Forbidden: Access denied" });
+  //     }
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // },
+
   async getAll(req, res, next) {
     try {
-      if (req.user?.role === "admin") {
-        const orders = await Order.find().populate("services", "title");
-        ResponseAPI.success(res, orders);
-      } else {
-        return res.status(403).json({ message: "Forbidden: Access denied" });
-      }
+      const orders = await Order.find()
+        .populate("userId", "name")
+        .populate({
+          path: "itemsId",
+          populate: {
+            path: "services",
+            select: "title",
+          },
+        });
+      ResponseAPI.success(res, orders);
     } catch (error) {
       next(error);
     }

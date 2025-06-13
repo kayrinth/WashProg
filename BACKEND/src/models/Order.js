@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["menunggu", "diambil", "diproses", "selesai"],
+      enum: ["menunggu", "diproses", "selesai", "dibatalkan"],
       default: "menunggu",
     },
     totalPrice: {

@@ -16,7 +16,6 @@ const verifyToken = async (req, res, next) => {
       );
     }
 
-    // Verifikasi token secara asinkron
     jwt.verify(token, env.jwtSecret, async (err, decoded) => {
       if (err) {
         return response.error(

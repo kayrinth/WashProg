@@ -12,7 +12,7 @@ const errorMsg = {
   NOT_VERIFIED: "User Not Verified",
   USER_ALREADY_EXISTS: "User Already Exists",
   TITLE_ALREADY_EXISTS: "Title Already Exists",
-  INVALID_CREDENTIALS: "Invalid Email or Password",
+  INVALID_CREDENTIALS: "Invalid phone number or Password",
   VERIFICATION_LINK_EXPIRED: "Verification Link invalid Or Expired",
 };
 
