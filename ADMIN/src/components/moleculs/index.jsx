@@ -1,2 +1,2 @@
-import  Coba  from "./coba.jsx";
-export { Coba };
+import  OrderTable  from "./orderTable.jsx";
+export { OrderTable };

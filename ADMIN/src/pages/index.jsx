@@ -1,2 +1,3 @@
-import  MapPage  from "./MapPage";
-export { MapPage };
+import MapPage from "./MapPage";
+import OrderPage from "./OrderPage";
+export { MapPage, OrderPage };
