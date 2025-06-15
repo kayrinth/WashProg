@@ -1,10 +1,57 @@
-const nodes = {
-  A: { lat: -7.7544068241818485, lng: 110.4092258951068 },
-  B: { lat: -7.754746855110473, lng: 110.40553481011467 },
-  C: { lat: -7.756187314887801, lng: 110.40383965407476 },
-  D: { lat: -7.757675607631759, lng: 110.40544361501121 },
-  E: { lat: -7.757484256002555, lng: 110.40358752643591 },
-  F: { lat: -7.7613790407553305, lng: 110.40946993071489 },
+// hooks/useNodes.js
+import { useState, useEffect } from "react";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+const useNodes = () => {
+  const [nodes, setNodes] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNodes = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/orders`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await res.json();
+
+        if (res.ok && Array.isArray(data.data)) {
+          const alphabet = "BCDEFGHIJKLMNOPQRSTUVWXYZ";
+          const nodeMap = {};
+
+          data.data.forEach((item, index) => {
+            const name = alphabet[index];
+            nodeMap[name] = {
+              lat: item.lat,
+              lng: item.lng,
+              address: item.address,
+              id: item._id,
+            };
+          });
+
+          nodeMap["A"] = {
+            lat: -7.7544068241818485,
+            lng: 110.4092258951068,
+            address: "Alamat Washprog",
+            id: "hardcoded",
+          };
+          setNodes(nodeMap);
+        } else {
+          console.error("Format data /orders tidak sesuai:", data);
+        }
+      } catch (err) {
+        console.error("Gagal fetch nodes:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNodes();
+  }, []);
+
+  return { nodes, loading };
 };
 
-export default nodes;
+export default useNodes;

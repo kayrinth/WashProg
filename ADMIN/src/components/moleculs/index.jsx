@@ -1,2 +1,3 @@
-import  OrderTable  from "./orderTable.jsx";
-export { OrderTable };
+import OrderTable from "./orderTable.jsx";
+import UserTable from "./userTable.jsx";
+export { OrderTable, UserTable };

@@ -4,8 +4,10 @@ import { MapContainer, Marker, TileLayer, Polyline } from "react-leaflet";
 import L from "leaflet";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
-import nodes from "./nodes";
+import useNodes from "./nodes";
 import tsp from "./tsp";
+import useAuthStore from "../../stores/useAuthStore";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const markerIcon = L.icon({
   iconUrl: markerIconPng,
@@ -16,9 +18,18 @@ const markerIcon = L.icon({
 });
 
 const getRoute = async (start, end) => {
+  const { token } = useAuthStore.getState();
+
   try {
     const response = await fetch(
-      `https://router.project-osrm.org/route/v1/walking/${start.lng},${start.lat};${end.lng},${end.lat}?overview=full&geometries=geojson`
+      `${API_BASE_URL}/route?startLat=${start.lat}&startLng=${start.lng}&endLat=${end.lat}&endLng=${end.lng}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
@@ -26,16 +37,15 @@ const getRoute = async (start, end) => {
     const data = await response.json();
 
     if (!data.routes?.length) {
-      console.warn("❌ Route not found", { start, end });
+      console.warn("Route not found", { start, end });
       return [
         [start.lat, start.lng],
         [end.lat, end.lng],
       ];
     }
-
     return data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
   } catch (err) {
-    console.error("❌ Gagal mengambil rute:", err);
+    console.error("Gagal mengambil rute:", err);
     return [
       [start.lat, start.lng],
       [end.lat, end.lng],
@@ -62,6 +72,7 @@ const getNearestNode = (position, nodes) => {
 };
 
 const MapView = () => {
+  const { nodes, loading } = useNodes();
   const [routeAll, setRouteAll] = useState([]);
   const [fixedAddress, setFixedAddress] = useState("Mendeteksi alamat...");
 
@@ -69,11 +80,10 @@ const MapView = () => {
     lat: -7.7544068241818485,
     lng: 110.4092258951068,
   };
-
   const getAddressFromCoords = async (lat, lng) => {
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+        `${API_BASE_URL}/reverse-geocode?lat=${lat}&lng=${lng}`
       );
       const data = await response.json();
       return data.display_name || "Lokasi tidak ditemukan";
@@ -95,9 +105,10 @@ const MapView = () => {
   }, []);
 
   useEffect(() => {
+    if (loading || Object.keys(nodes).length === 0) return;
+
     const fetchRoute = async () => {
       const nearestNode = getNearestNode(fixedPosition, nodes);
-
       const { path } = tsp(nodes, nearestNode);
       console.log("🔍 Jalur terbaik:", path);
 
@@ -124,10 +135,12 @@ const MapView = () => {
     };
 
     fetchRoute();
-  }, []);
+  }, [loading, nodes]);
+
+  if (loading) return <p>🔄 Memuat lokasi nodes...</p>;
 
   return (
-    <div className="w-full h-screen rounded-lg overflow-hidden border border-gray-300">
+    <div className="w-full h-screen rounded-lg overflow-hidden border border-gray-300 mt-16 lg:mt-0">
       <p className="text-sm p-2 text-gray-600 bg-white shadow">
         📍 Lokasi Anda: {fixedAddress}
       </p>

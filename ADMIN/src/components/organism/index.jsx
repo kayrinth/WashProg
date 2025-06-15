@@ -1,3 +1,3 @@
 import Orders from "./orders";
-
-export { Orders };
+import Users from "./users";
+export { Orders, Users };

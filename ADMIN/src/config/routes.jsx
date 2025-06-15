@@ -1,6 +1,6 @@
 // src/router/index.js
 import { createBrowserRouter } from "react-router-dom";
-import { MapPage, OrderPage } from "../pages";
+import { MapPage, OrderPage, UserPage } from "../pages";
 import AdminLayout from "../components/template/adminLayout";
 
 export const router = createBrowserRouter([
@@ -17,6 +17,14 @@ export const router = createBrowserRouter([
     element: (
       <AdminLayout>
         <OrderPage />
+      </AdminLayout>
+    ),
+  },
+  {
+    path: "/users",
+    element: (
+      <AdminLayout>
+        <UserPage />
       </AdminLayout>
     ),
   },
