@@ -4,6 +4,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const useNodes = () => {
   const [nodes, setNodes] = useState({});
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +19,8 @@ const useNodes = () => {
         const data = await res.json();
 
         if (res.ok && Array.isArray(data.data)) {
+          setOrders(data.data);
+
           const alphabet = "BCDEFGHIJKLMNOPQRSTUVWXYZ";
           const nodeMap = {};
 
@@ -51,7 +54,7 @@ const useNodes = () => {
     fetchNodes();
   }, []);
 
-  return { nodes, loading };
+  return { nodes, loading, orders };
 };
 
 export default useNodes;

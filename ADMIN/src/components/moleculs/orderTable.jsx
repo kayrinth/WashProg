@@ -96,7 +96,7 @@ const OrderTable = ({ orders = [] }) => {
                       }`}
                       disabled={order.status !== "menunggu"}
                     >
-                      Diproses
+                      Proses
                     </button>
 
                     <button

@@ -1,9 +1,42 @@
+import { useEffect, useState, useMemo } from "react";
 import MapView from "../components/algoritma/mapView";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export default function MapPage() {
+  const [dataOrders, setDataOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/orders`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const json = await res.json();
+
+        if (res.ok && Array.isArray(json.data)) {
+          setDataOrders(json.data);
+        } else {
+          console.error("Data orders tidak valid:", json);
+          setDataOrders([]);
+        }
+      } catch (error) {
+        console.error("Gagal fetch orders:", error);
+        setDataOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  const memoOrders = useMemo(() => dataOrders, [dataOrders]);
+  if (loading) return <p>Loading orders...</p>;
   return (
     <div>
-      <MapView />
+      <MapView orders={memoOrders} />
     </div>
   );
 }
