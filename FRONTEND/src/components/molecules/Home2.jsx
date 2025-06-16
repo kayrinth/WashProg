@@ -20,7 +20,8 @@ export default function Home2() {
                 <img
                   src={logo2}
                   alt="WashProg Logo"
-                  className="absolute top-2 left-2 w-20" // Ukuran bisa disesuaikan
+                  className="absolute top-2 left-2 w-20"
+                  loading="lazy"
                 />
 
                 {/* Gambar utama */}
@@ -28,6 +29,7 @@ export default function Home2() {
                   src={gambar2}
                   alt="Premium Treatment"
                   className="w-full h-48 object-cover rounded-lg border-4 border-solid border-[#FF8225]"
+                  loading="lazy"
                 />
               </div>
 
@@ -43,7 +45,8 @@ export default function Home2() {
                 <img
                   src={logo2}
                   alt="WashProg Logo"
-                  className="absolute top-2 left-2 w-20" // Ukuran bisa disesuaikan
+                  className="absolute top-2 left-2 w-20"
+                  loading="lazy"
                 />
 
                 {/* Gambar utama */}
@@ -51,6 +54,7 @@ export default function Home2() {
                   src={gambar1}
                   alt="Premium Treatment"
                   className="w-full h-48 object-cover rounded-lg border-4 border-solid border-[#FF8225]"
+                  loading="lazy"
                 />
               </div>
 
@@ -68,7 +72,8 @@ export default function Home2() {
                 <img
                   src={logo2}
                   alt="WashProg Logo"
-                  className="absolute top-2 left-2 w-20" // Ukuran bisa disesuaikan
+                  className="absolute top-2 left-2 w-20"
+                  loading="lazy"
                 />
 
                 {/* Gambar utama */}
@@ -76,6 +81,7 @@ export default function Home2() {
                   src={gambar3}
                   alt="Premium Treatment"
                   className="w-full h-48 object-cover rounded-lg border-4 border-solid border-[#FF8225]"
+                  loading="lazy"
                 />
               </div>
 

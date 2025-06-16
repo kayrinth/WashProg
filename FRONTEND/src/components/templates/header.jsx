@@ -68,13 +68,13 @@ export default function Header() {
         </nav>
 
         {user ? (
-          <div className="flex items-center gap-2">
+          <div className=" flex items-center gap-2">
             <span className="text-sm font-medium text-gray-800">
-              Halo, {user.name}
+              {user.name}
             </span>
             <button
+              className="bg-[red] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50 hidden md:flex items-center"
               onClick={logout}
-              className="text-red-500 text-sm hover:underline"
             >
               Logout
             </button>
@@ -112,13 +112,10 @@ export default function Header() {
               Tentang Kami
             </a>
             {user ? (
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-800">
-                  Halo, {user.name}
-                </span>
+              <div className="items-center gap-2">
                 <button
-                  // onClick={logout}
-                  className="text-red-500 text-sm hover:underline"
+                  onClick={logout}
+                  className="text-white font-medium bg-red-600 px-4 py-2 rounded-md hover:bg-opacity-50"
                 >
                   Logout
                 </button>

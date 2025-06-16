@@ -80,6 +80,7 @@ export default function Order() {
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
         }}
+        loading="lazy"
       >
         <div className="text-center px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">

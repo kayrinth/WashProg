@@ -23,6 +23,9 @@ export default function LoginForm({
         body: JSON.stringify(loginData),
       });
 
+      console.log("API_BASE_URL:", API_BASE_URL); // Debug log
+      console.log("Login data:", loginData); // Debug log
+      console.log("Response status:", res.status);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Login gagal");
 
