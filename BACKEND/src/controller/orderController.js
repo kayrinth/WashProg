@@ -48,6 +48,7 @@ const orderController = {
         const orderItem = new OrderItem({
           orderId: order._id,
           services: service.serviceId,
+          address,
           quantity: service.quantity,
           subTotal,
           items: service.items,
