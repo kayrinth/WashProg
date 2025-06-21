@@ -1,0 +1,11 @@
+.sidebar-container {
+  height: 100vh !important;
+  min-height: 100vh !important;
+}
+
+/* Untuk memastikan parent container juga full height */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}

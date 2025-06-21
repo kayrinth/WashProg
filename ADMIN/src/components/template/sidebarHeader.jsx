@@ -29,14 +29,17 @@ export default function Sidebar() {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 left-0 md:h-screen h-full w-56 bg-black text-white flex flex-col z-[9999] transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-screen min-h-screen w-56 bg-black text-white flex flex-col z-[9999] transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:static md:block`}
+        } md:translate-x-0 md:static md:block md:h-full md:min-h-screen`}
       >
-        <div className="p-6 text-2xl font-bold border-b border-gray-700">
+        {/* Header Logo */}
+        <div className="p-6 text-2xl font-bold border-b border-gray-700 flex-shrink-0">
           <img src={logo} alt="logo washprog" />
         </div>
-        <nav className="flex-1 p-4 space-y-2 bg-black">
+
+        {/* Navigation Menu */}
+        <nav className="flex-1 p-4 space-y-2 bg-black overflow-y-auto">
           {menuItems.map((item) => (
             <NavLink
               key={item.name}
@@ -53,7 +56,20 @@ export default function Sidebar() {
             </NavLink>
           ))}
         </nav>
+
+        {/* Footer (opsional) */}
+        <div className="p-4 border-t border-gray-700 flex-shrink-0">
+          {/* Tambahkan footer content jika diperlukan */}
+        </div>
       </aside>
+
+      {/* Overlay untuk mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-[9998] md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
     </>
   );
 }

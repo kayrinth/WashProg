@@ -35,8 +35,8 @@ const useNodes = () => {
           });
 
           nodeMap["A"] = {
-            lat: -7.7544068241818485,
-            lng: 110.4092258951068,
+            lat: -7.754656948044742,
+            lng: 110.40922455841186,
             address: "Alamat Washprog",
             id: "hardcoded",
           };

@@ -1,6 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import { MapContainer, Marker, TileLayer, Polyline } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  TileLayer,
+  Polyline,
+  Popup,
+} from "react-leaflet";
 import L from "leaflet";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
@@ -36,21 +42,8 @@ const iconSelesai = L.icon({
 });
 
 const fixedPosition = {
-  lat: -7.7544068241818485,
-  lng: 110.4092258951068,
-};
-
-const getAddressFromCoords = async (lat, lng) => {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/reverse-geocode?lat=${lat}&lng=${lng}`
-    );
-    const data = await response.json();
-    return data.display_name || "Lokasi tidak ditemukan";
-  } catch (err) {
-    console.error("Error fetching address:", err);
-    return "Gagal mendapatkan alamat";
-  }
+  lat: -7.754656948044742,
+  lng: 110.40922455841186,
 };
 
 const getRoute = async (start, end) => {
@@ -108,18 +101,24 @@ const getNearestNode = (position, nodes) => {
 const MapView = ({ orders }) => {
   const [routeMenunggu, setrouteMenunggu] = useState([]);
   const [routeSelesai, setrouteSelesai] = useState([]);
-  const [fixedAddress, setFixedAddress] = useState("Mendeteksi alamat...");
+  const [googleMapsMenungguUrl, setGoogleMapsMenungguUrl] = useState("");
+  const [googleMapsSelsaiUrl, setGoogleMapsSelsaiUrl] = useState("");
+  const [googleMapsSemuaUrl, setGoogleMapsSemuaUrl] = useState("");
   const [loading, setLoading] = useState(true);
 
   const menungguOrders = (orders || []).filter(
     (order) => order.status === "menunggu"
   );
-
   const selesaiOrders = (orders || []).filter(
     (order) => order.status === "selesai"
   );
+  const semuaOrders = (orders || []).filter(
+    (order) => order.status === "selesai" || order.status === "menunggu"
+  );
 
   const alphabet = "BCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  //===================MENUNGGU ORDER===================//
 
   const menungguNodes = useMemo(() => {
     const nodes = {};
@@ -167,12 +166,28 @@ const MapView = ({ orders }) => {
         [menungguNodes[nearestNode].lat, menungguNodes[nearestNode].lng],
       ];
 
+      const coordinates = path.map((nodeKey) => {
+        const { lat, lng } = menungguNodes[nodeKey];
+        return `${lat.toFixed(6)},${lng.toFixed(6)}`;
+      });
+
+      const googleMapsUrl = `https://www.google.com/maps/dir/${coordinates.join(
+        "/"
+      )}/?dirflg=d`;
+
+      console.log("🗺️ Rute Google Maps Menunggu:", googleMapsUrl);
+
       setrouteMenunggu([...fixedToStart, ...fullRoute]);
+      setGoogleMapsMenungguUrl(googleMapsUrl);
       setLoading(false);
     };
 
     fetchRouteMenunggu();
   }, [orders]);
+
+  //===================MENUNGGU ORDER===================//
+
+  //===================SELESAI ORDER===================//
 
   const selesaiNodes = useMemo(() => {
     const nodes = {};
@@ -220,23 +235,93 @@ const MapView = ({ orders }) => {
         [selesaiNodes[nearestNode].lat, selesaiNodes[nearestNode].lng],
       ];
 
+      const coordinates = path.map((nodeKey) => {
+        const { lat, lng } = selesaiNodes[nodeKey];
+        return `${lat},${lng}`;
+      });
+
+      const googleMapsUrl = `https://www.google.com/maps/dir/${coordinates.join(
+        "/"
+      )}`;
+      console.log("🗺️ Rute Google Maps:", googleMapsUrl);
+
       setrouteSelesai([...fixedToStart, ...fullRoute]);
+      setGoogleMapsSelsaiUrl(googleMapsUrl);
       setLoading(false);
     };
 
     fetchRouteSelesai();
   }, [orders]);
 
-  useEffect(() => {
-    const fetchAddress = async () => {
-      const address = await getAddressFromCoords(
-        fixedPosition.lat,
-        fixedPosition.lng
-      );
-      setFixedAddress(address);
+  //===================SELESAI ORDER===================//
+
+  //===================SEMUA ORDER===================//
+
+  const semuaNode = useMemo(() => {
+    const nodes = {};
+    semuaOrders.forEach((order, idx) => {
+      nodes[alphabet[idx]] = {
+        lat: order.lat,
+        lng: order.lng,
+        address: order.address,
+        id: order._id,
+      };
+    });
+    nodes["A"] = {
+      lat: fixedPosition.lat,
+      lng: fixedPosition.lng,
+      address: "Alamat Washprog",
+      id: "hardcoded",
     };
-    fetchAddress();
-  }, []);
+    return nodes;
+  }, [semuaOrders]);
+
+  useEffect(() => {
+    const fetchRouteSemua = async () => {
+      if (Object.keys(semuaNode).length <= 1) return;
+
+      const nearestNode = getNearestNode(fixedPosition, semuaNode);
+      const { path } = tsp(semuaNode, nearestNode);
+      console.log("🔍 Jalur terbaik:", path);
+
+      let fullRoute = [];
+
+      for (let i = 0; i < path.length - 1; i++) {
+        const from = semuaNode[path[i]];
+        const to = semuaNode[path[i + 1]];
+        const segment = await getRoute(from, to);
+        fullRoute = fullRoute.concat(
+          fullRoute.length > 0 &&
+            JSON.stringify(fullRoute.at(-1)) === JSON.stringify(segment[0])
+            ? segment.slice(1)
+            : segment
+        );
+      }
+
+      const fixedToStart = [
+        [fixedPosition.lat, fixedPosition.lng],
+        [semuaNode[nearestNode].lat, semuaNode[nearestNode].lng],
+      ];
+
+      const coordinates = path.map((nodeKey) => {
+        const { lat, lng } = semuaNode[nodeKey];
+        return `${lat},${lng}`;
+      });
+
+      const googleMapsUrl = `https://www.google.com/maps/dir/${coordinates.join(
+        "/"
+      )}`;
+      console.log("🗺️ SEMUA RUTE:", googleMapsUrl);
+
+      setrouteSelesai([...fixedToStart, ...fullRoute]);
+      setGoogleMapsSemuaUrl(googleMapsUrl);
+      setLoading(false);
+    };
+
+    fetchRouteSemua();
+  }, [orders]);
+
+  //===================SEMUA ORDER===================//
 
   if (menungguOrders.length === 0)
     return <p className="text-center p-4">✅ Tidak ada pesanan menunggu.</p>;
@@ -247,21 +332,73 @@ const MapView = ({ orders }) => {
 
   return (
     <div className="w-full h-screen rounded-lg overflow-hidden border border-gray-300 mt-16 lg:mt-0">
-      <p className="text-sm p-2 text-gray-600 bg-white shadow">
-        📍 Lokasi Anda: {fixedAddress}
-      </p>
       <MapContainer
         center={[fixedPosition.lat, fixedPosition.lng]}
         zoom={17}
-        style={{ height: "100vh" }}
+        zoomControl={false}
+        style={{ height: "100vh", position: "relative" }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <div className="absolute bottom-24 lg:bottom-8 right-4 z-[1000] space-y-2 text-white">
+          {googleMapsMenungguUrl && (
+            <button
+              onClick={() =>
+                window.open(
+                  googleMapsMenungguUrl,
+                  "_blank",
+                  "noopener,noreferrer"
+                )
+              }
+              className=" text-white block bg-blue-600 w-32 py-4 rounded hover:bg-blue-700 transition shadow"
+            >
+              Rute Menunggu
+            </button>
+          )}
+          {googleMapsSelsaiUrl && (
+            <button
+              onClick={() =>
+                window.open(
+                  googleMapsSelsaiUrl,
+                  "_blank",
+                  "noopener,noreferrer"
+                )
+              }
+              className="block bg-green-600 text-white w-32 py-3 rounded hover:bg-green-700 transition shadow"
+            >
+              Rute Selesai
+            </button>
+          )}
+          {googleMapsSemuaUrl && (
+            <button
+              onClick={() =>
+                window.open(googleMapsSemuaUrl, "_blank", "noopener,noreferrer")
+              }
+              className="block bg-yellow-500 text-white w-32 py-3 rounded hover:bg-yellow-700 transition shadow"
+            >
+              Semua Rute
+            </button>
+          )}
+        </div>
         {menungguOrders.map((order) => (
           <Marker
             key={order._id}
             position={[order.lat, order.lng]}
             icon={iconMenunggu}
-          />
+          >
+            <Popup>
+              <div>
+                <p className="font-semibold text-sm mb-1">📦 {order.address}</p>
+                <a
+                  href={`https://www.google.com/maps?q=${order.lat},${order.lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline text-sm"
+                >
+                  📍 Buka di Google Maps
+                </a>
+              </div>
+            </Popup>
+          </Marker>
         ))}
 
         {selesaiOrders.map((order) => (

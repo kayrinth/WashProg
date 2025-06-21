@@ -28,6 +28,7 @@ const OrderTable = ({ orders = [] }) => {
               <th className="py-3 px-4">Item Pesanan</th>
               <th className="py-3 px-4">Subtotal</th>
               <th className="py-3 px-4">Total Harga</th>
+              <th className="py-3 px-4">Detail Alamat</th>
               <th className="py-3 px-4">Status</th>
               <th className="py-3 px-4">Aksi</th>
             </tr>
@@ -78,6 +79,7 @@ const OrderTable = ({ orders = [] }) => {
                   <td className="py-3 px-4">
                     Rp {order.totalPrice.toLocaleString("id-ID")}
                   </td>
+                  <td className="py-3 px-4">{order.address}</td>
                   <td className="py-3 px-4">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(
@@ -87,9 +89,9 @@ const OrderTable = ({ orders = [] }) => {
                       {order.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4 space-x-2">
+                  <td className="py-3 space-x-2">
                     <button
-                      className={`text-yellow-800  bg-yellow-200  hover:bg-yellow-100 hover:text-yellow-600 px-4 py-1 rounded-full  ${
+                      className={`text-yellow-800  bg-yellow-200 text-xs hover:bg-yellow-100 hover:text-yellow-600 px-4 py-1 rounded-full  ${
                         order.status !== "menunggu"
                           ? "opacity-50 cursor-not-allowed hover:no-underline"
                           : ""
@@ -100,7 +102,7 @@ const OrderTable = ({ orders = [] }) => {
                     </button>
 
                     <button
-                      className={`text-green-800  bg-green-200 hover:bg-green-100 hover:text-green-600 px-4 py-1 rounded-full  ${
+                      className={`text-green-800  bg-green-200 text-xs hover:bg-green-100 hover:text-green-600 px-2 py-1 rounded-full  ${
                         order.status !== "diproses"
                           ? "opacity-50 cursor-not-allowed hover:no-underline"
                           : ""
@@ -149,8 +151,8 @@ const OrderTable = ({ orders = [] }) => {
                 {order.userId.name}
               </p>
 
-              <p className="font-medium">Pesanan:</p>
-              <div className="text-sm mb-3 flex justify-start ">
+              <p className="font-light">Pesanan:</p>
+              <div className="text-sm mb-3 flex justify-start font-li">
                 {order.itemsId.map((item, i) => (
                   <div key={i} className="ml-2 mb-1">
                     <div>{item.items}</div>
@@ -162,6 +164,11 @@ const OrderTable = ({ orders = [] }) => {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              <p className="font-light text-sm">Detail Alamat:</p>
+              <div className="text-sm mb-3 flex justify-start font-li">
+                {order.address}
               </div>
 
               <div className="text-sm font-medium mb-3">
