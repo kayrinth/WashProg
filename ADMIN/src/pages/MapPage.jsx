@@ -1,9 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
 import MapView from "../components/algoritma/mapView";
+import useAuthStore from "../stores/useAuthStore";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function MapPage() {
+  const { token } = useAuthStore.getState();
   const [dataOrders, setDataOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -11,7 +13,11 @@ export default function MapPage() {
     const fetchOrders = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/orders`, {
-          headers: { "Content-Type": "application/json" },
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         });
         const json = await res.json();
 

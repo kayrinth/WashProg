@@ -1,2 +1,3 @@
 import logo from "./logo.png";
-export { logo };
+import logo2 from "./logo2.png";
+export { logo, logo2 };

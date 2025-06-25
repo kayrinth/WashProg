@@ -1,3 +1,4 @@
 import OrderTable from "./orderTable.jsx";
 import UserTable from "./userTable.jsx";
-export { OrderTable, UserTable };
+import LoginForm from "./formLogin.jsx";
+export { OrderTable, UserTable, LoginForm };

@@ -20,6 +20,7 @@ const useAuthStore = create(
         localStorage.removeItem("name");
         localStorage.removeItem("email");
         localStorage.removeItem("token");
+        localStorage.removeItem("auth");
       },
     }),
     {

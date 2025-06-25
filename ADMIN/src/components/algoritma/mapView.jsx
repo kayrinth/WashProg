@@ -324,9 +324,7 @@ const MapView = ({ orders }) => {
   //===================SEMUA ORDER===================//
 
   if (menungguOrders.length === 0)
-    return <p className="text-center p-4">✅ Tidak ada pesanan menunggu.</p>;
-  if (selesaiOrders.length === 0)
-    return <p className="text-center p-4">✅ Tidak ada pesanan selesai.</p>;
+    return <p className="text-center p-4">Tidak ada pesanan.</p>;
   if (loading)
     return <p className="text-center p-4">🔄 Memuat jalur terbaik...</p>;
 

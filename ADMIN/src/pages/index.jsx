@@ -1,4 +1,5 @@
 import MapPage from "./MapPage";
 import OrderPage from "./OrderPage";
 import UserPage from "./UserPage";
-export { MapPage, OrderPage, UserPage };
+import LoginPage from "./LoginPage";
+export { MapPage, OrderPage, UserPage, LoginPage };
