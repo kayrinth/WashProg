@@ -99,9 +99,9 @@ const userController = {
   //login admin
   async loginAdmin(req, res, next) {
     try {
-      const { email, password } = req.body;
+      const { phoneNumber, password } = req.body;
 
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ phoneNumber });
       if (!user) {
         return next({
           name: errorName.NOT_FOUND,
@@ -126,12 +126,19 @@ const userController = {
 
       // Generate JWT token
       const token = jwt.sign(
-        { id: user._id, email: user.email },
+        { id: user._id, email: user.phoneNumber },
         env.jwtSecret,
         { expiresIn: env.jwtExpiresIn }
       );
 
-      return ResponseAPI.success(res, { token });
+      return ResponseAPI.success(res, {
+        token,
+        userId: user._id,
+        user: {
+          name: user.name,
+          phoneNumber: user.phoneNumber,
+        },
+      });
     } catch (error) {
       next(error);
     }
@@ -241,8 +248,9 @@ const userController = {
 
   async getAll(req, res, next) {
     try {
-      const user = await User.find(req.user).select("-password");
-
+      const user = await User.find({ role: { $ne: "admin" } }).select(
+        "-password"
+      );
       ResponseAPI.success(res, user);
     } catch (error) {
       next(error);

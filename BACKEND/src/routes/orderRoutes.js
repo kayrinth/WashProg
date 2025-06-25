@@ -4,7 +4,7 @@ const { verifyToken } = require("../middleware");
 const { orderController } = require("../controller");
 
 orderRoutes.post("/order", verifyToken, orderController.create);
-orderRoutes.get("/orders", orderController.getAll);
+orderRoutes.get("/orders", verifyToken, orderController.getAll);
 orderRoutes.get("/orders/user/", verifyToken, orderController.getByUser);
 orderRoutes.delete("/order/delete/:id", verifyToken, orderController.delete);
 
