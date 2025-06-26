@@ -5,7 +5,7 @@ export default function Home1() {
         <div className="bg-black bg-opacity-70 rounded-xl shadow-2xl p-10 md:p-12 w-full max-w-8xl text-center">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white drop-shadow-lg mb-6">
             Kenapa Harus Mencuci di <br className="hidden sm:block" />
-            <span className="text-[#FF8225]">WashProg</span> ?
+            <span className="text-[#068FFF]">WashProg</span> ?
           </h1>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-6 mx-auto max-w-6xl">

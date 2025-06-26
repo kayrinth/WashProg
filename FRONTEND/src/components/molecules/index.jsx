@@ -8,6 +8,7 @@ import SelectService from "./SelectService.jsx";
 import InputNameItems from "./InputNameItems.jsx";
 import LoginForm from "./FormLogin";
 import RegisterForm from "./FormRegist.jsx";
+import HistoryTable from "./histroyTable.jsx";
 
 export {
   Hero,
@@ -20,4 +21,5 @@ export {
   InputNameItems,
   LoginForm,
   RegisterForm,
+  HistoryTable,
 };

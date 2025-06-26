@@ -11,7 +11,7 @@ const LoadingOverlay = ({
     >
       <div className="bg-white rounded-lg p-8 max-w-sm w-full mx-4 text-center">
         {/* Spinner */}
-        <div className="w-12 h-12 border-4 border-[#FF8225] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <div className="w-12 h-12 border-4 border-[#068FFF] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
 
         {/* Title */}
         <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>

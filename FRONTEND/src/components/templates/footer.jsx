@@ -25,7 +25,7 @@ export default function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-[#DC5F00] transition duration-300"
+                className="hover:text-[#4E4FEB] transition duration-300"
               >
                 Beranda
               </a>
@@ -33,7 +33,7 @@ export default function Footer() {
             <li>
               <a
                 href="/menu"
-                className="hover:text-[#DC5F00] transition duration-300"
+                className="hover:text-[#4E4FEB] transition duration-300"
               >
                 Daftar Menu
               </a>
@@ -41,7 +41,7 @@ export default function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-[#DC5F00] transition duration-300"
+                className="hover:text-[#4E4FEB] transition duration-300"
               >
                 Pesan Sekarang
               </a>
@@ -49,7 +49,7 @@ export default function Footer() {
             <li>
               <a
                 href="#"
-                className="hover:text-[#DC5F00] transition duration-300"
+                className="hover:text-[#4E4FEB] transition duration-300"
               >
                 Tentang Kami
               </a>
@@ -63,19 +63,19 @@ export default function Footer() {
           <div className="flex justify-center md:justify-end space-x-5">
             <a
               href="#"
-              className="hover:text-[#DC5F00] transition duration-300"
+              className="hover:text-[#4E4FEB] transition duration-300"
             >
               <FontAwesomeIcon icon={faFacebook} className="text-2xl" />
             </a>
             <a
-              href="#"
-              className="hover:text-[#DC5F00] transition duration-300"
+              href="https://www.instagram.com/washprog?utm_source=ig_web_button_share_sheet&igsh=bWlyc3FxZmQwaXBl"
+              className="hover:text-[#4E4FEB] transition duration-300"
             >
               <FontAwesomeIcon icon={faInstagram} className="text-2xl" />
             </a>
             <a
               href="#"
-              className="hover:text-[#DC5F00] transition duration-300"
+              className="hover:text-[#4E4FEB] transition duration-300"
             >
               <FontAwesomeIcon icon={faTwitter} className="text-2xl" />
             </a>

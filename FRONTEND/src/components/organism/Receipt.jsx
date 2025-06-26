@@ -197,7 +197,7 @@ export default function Receipt() {
             className={`px-4 py-2 rounded-lg text-white ${
               isSubmitting || cartItems.length === 0 || !selectedLatLng
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#FF8225] hover:bg-[#e9741f]"
+                : "bg-[#068FFF] hover:bg-[#2d6898]"
             }`}
             disabled={isSubmitting || cartItems.length === 0 || !selectedLatLng}
           >

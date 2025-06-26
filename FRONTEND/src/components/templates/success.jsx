@@ -57,7 +57,7 @@ const SuccessModal = ({
         {/* OK Button */}
         <button
           onClick={btnclose}
-          className="mt-4 px-4 py-2 bg-[#FF8225] text-white rounded hover:bg-orange-600"
+          className="mt-4 px-4 py-2 bg-[#068FFF] text-white rounded hover:bg-orange-600"
         >
           OK
         </button>

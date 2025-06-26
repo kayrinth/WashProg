@@ -5,6 +5,7 @@ import {
   OrderPage,
   ReceiptPage,
   AuthSuccess,
+  HistoryPage,
 } from "../pages";
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
   {
     path: "/receipt",
     element: <ReceiptPage />,
+  },
+  {
+    path: "/history",
+    element: <HistoryPage />,
   },
   {
     path: "*",

@@ -99,7 +99,7 @@ export default function Order() {
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               Pilih Kategori & Layanan
             </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-orange-400 to-orange-600 mx-auto rounded-full"></div>
+            <div className="w-20 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full"></div>
           </div>
 
           <div className="space-y-6">
@@ -113,7 +113,7 @@ export default function Order() {
             <div className="pt-4">
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-[#FF8225] text-white text-lg py-2 rounded-lg shadow-md hover:bg-opacity-50 transition-all"
+                className="w-full bg-[#4E4FEB] text-white text-lg py-2 rounded-lg shadow-md hover:bg-opacity-50 transition-all"
               >
                 Pesan
               </button>
@@ -137,7 +137,7 @@ export default function Order() {
             <div>
               <button
                 onClick={handleClick}
-                className="bg-[#FF8225] text-white px-4 py-2 rounded-lg shadow-md"
+                className="bg-[#068FFF] text-white px-4 py-2 rounded-lg shadow-md"
               >
                 Checkout
               </button>
