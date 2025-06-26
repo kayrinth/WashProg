@@ -83,19 +83,6 @@ const orderController = {
     }
   },
 
-  // async getAll(req, res, next) {
-  //   try {
-  //     if (req.user?.role === "admin") {
-  //       const orders = await Order.find().populate("services", "title");
-  //       ResponseAPI.success(res, orders);
-  //     } else {
-  //       return res.status(403).json({ message: "Forbidden: Access denied" });
-  //     }
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // },
-
   async getAll(req, res, next) {
     try {
       const orders = await Order.find()
@@ -118,8 +105,14 @@ const orderController = {
       const userId = req.user._id;
 
       const findOrdersByUser = await Order.find({ userId: userId })
-        .populate("userId", "name, quantity")
-        .populate("itemsId", "services");
+        .populate("userId", "name")
+        .populate({
+          path: "itemsId",
+          populate: {
+            path: "services",
+            select: "title",
+          },
+        });
 
       if (findOrdersByUser.length === 0) {
         return next({
@@ -129,6 +122,30 @@ const orderController = {
       }
 
       ResponseAPI.success(res, findOrdersByUser);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateStatus(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+
+      const updatedOrder = await Order.findByIdAndUpdate(
+        id,
+        { status },
+        { new: true }
+      );
+
+      if (!updatedOrder) {
+        return next({
+          name: "NOT_FOUND",
+          message: "Order tidak ditemukan",
+        });
+      }
+
+      ResponseAPI.success(res, updatedOrder);
     } catch (error) {
       next(error);
     }
