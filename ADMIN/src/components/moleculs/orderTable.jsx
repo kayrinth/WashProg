@@ -1,17 +1,17 @@
 // src/components/OrderResponsive.jsx
 import React from "react";
 
-const OrderTable = ({ orders = [] }) => {
+const OrderTable = ({ orders = [], onUpdateStatus }) => {
   const getStatusClass = (status) => {
     switch (status) {
       case "menunggu":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-100 px-4 text-yellow-800";
       case "diproses":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-100 px-4 text-blue-800";
       case "selesai":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 px-4 text-green-800";
       default:
-        return "bg-red-100 text-red-800";
+        return "bg-red-100 px-4  text-red-800";
     }
   };
 
@@ -89,28 +89,34 @@ const OrderTable = ({ orders = [] }) => {
                       {order.status}
                     </span>
                   </td>
-                  <td className="py-3 space-x-2">
-                    <button
-                      className={`text-yellow-800  bg-yellow-200 text-xs hover:bg-yellow-100 hover:text-yellow-600 px-4 py-1 rounded-full  ${
-                        order.status !== "menunggu"
-                          ? "opacity-50 cursor-not-allowed hover:no-underline"
-                          : ""
-                      }`}
-                      disabled={order.status !== "menunggu"}
-                    >
-                      Proses
-                    </button>
+                  <td className="py-3">
+                    <div className="flex justify-center items-center space-x-2">
+                      <button
+                        className={`text-yellow-800 bg-yellow-200 text-xs hover:bg-yellow-100 hover:text-yellow-600 px-4 py-1 rounded-full
+        ${
+          order.status !== "menunggu"
+            ? "opacity-50 cursor-not-allowed hover:no-underline"
+            : ""
+        }`}
+                        disabled={order.status !== "menunggu"}
+                        onClick={() => onUpdateStatus(order._id, "diproses")}
+                      >
+                        Proses
+                      </button>
 
-                    <button
-                      className={`text-green-800  bg-green-200 text-xs hover:bg-green-100 hover:text-green-600 px-2 py-1 rounded-full  ${
-                        order.status !== "diproses"
-                          ? "opacity-50 cursor-not-allowed hover:no-underline"
-                          : ""
-                      }`}
-                      disabled={order.status !== "diproses"}
-                    >
-                      Selesaikan
-                    </button>
+                      <button
+                        className={`text-green-800 bg-green-200 text-xs hover:bg-green-100 hover:text-green-600 px-2 py-1 rounded-full
+        ${
+          order.status !== "diproses"
+            ? "opacity-50 cursor-not-allowed hover:no-underline"
+            : ""
+        }`}
+                        disabled={order.status !== "diproses"}
+                        onClick={() => onUpdateStatus(order._id, "selesai")}
+                      >
+                        Selesaikan
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -175,10 +181,10 @@ const OrderTable = ({ orders = [] }) => {
                 Total Harga: Rp {order.totalPrice.toLocaleString("id-ID")}
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center justify-center">
                 <button
                   disabled={order.status !== "menunggu"}
-                  className={`text-yellow-800  bg-yellow-200 px-4 py-1 rounded-full hover:bg-yellow-100 hover:text-yellow-600 flex-1 ${
+                  className={`text-yellow-800 bg-yellow-200 px-4 py-1 rounded-full hover:bg-yellow-100 hover:text-yellow-600 flex-1 ${
                     order.status !== "menunggu"
                       ? "opacity-50 cursor-not-allowed hover:no-underline"
                       : ""
