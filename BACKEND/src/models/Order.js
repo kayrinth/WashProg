@@ -18,7 +18,13 @@ const orderSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["menunggu", "diproses", "selesai", "dibatalkan"],
+      enum: [
+        "menunggu",
+        "diproses",
+        "selesai",
+        "diantar",
+        "dibatalkan",
+      ],
       default: "menunggu",
     },
     totalPrice: {
@@ -40,6 +46,11 @@ const orderSchema = new mongoose.Schema(
     lng: {
       type: Number,
       required: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["belum lunas", "lunas"],
+      default: "belum lunas",
     },
     deletedAt: {
       type: Date,

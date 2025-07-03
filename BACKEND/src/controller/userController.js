@@ -81,6 +81,13 @@ const userController = {
         { expiresIn: env.jwtExpiresIn }
       );
 
+      if (user.role !== "user") {
+        return next({
+          name: errorName.FORBIDDEN,
+          message: "Access denied. Admin privileges required.",
+        });
+      }
+
       // Kirim response dengan token dan data user
       return ResponseAPI.success(res, {
         token,

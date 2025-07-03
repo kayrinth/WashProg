@@ -25,6 +25,7 @@ const orderController = {
       let order = new Order({
         userId,
         status: "menunggu",
+        paymentStatus: "belum lunas",
         lat,
         lng,
         address,
@@ -135,6 +136,30 @@ const orderController = {
       const updatedOrder = await Order.findByIdAndUpdate(
         id,
         { status },
+        { new: true }
+      );
+
+      if (!updatedOrder) {
+        return next({
+          name: "NOT_FOUND",
+          message: "Order tidak ditemukan",
+        });
+      }
+
+      ResponseAPI.success(res, updatedOrder);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateStatusPembayaran(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { paymentStatus } = req.body;
+
+      const updatedOrder = await Order.findByIdAndUpdate(
+        id,
+        { paymentStatus },
         { new: true }
       );
 
