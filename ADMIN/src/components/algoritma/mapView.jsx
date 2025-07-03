@@ -100,7 +100,7 @@ const getNearestNode = (position, nodes) => {
 
 const MapView = ({ orders }) => {
   const [routeMenunggu, setrouteMenunggu] = useState([]);
-  const [routeSelesai, setrouteSelesai] = useState([]);
+  const [routeDiantar, setrouteDiantar] = useState([]);
   const [googleMapsMenungguUrl, setGoogleMapsMenungguUrl] = useState("");
   const [googleMapsSelsaiUrl, setGoogleMapsSelsaiUrl] = useState("");
   const [googleMapsSemuaUrl, setGoogleMapsSemuaUrl] = useState("");
@@ -110,10 +110,10 @@ const MapView = ({ orders }) => {
     (order) => order.status === "menunggu"
   );
   const selesaiOrders = (orders || []).filter(
-    (order) => order.status === "selesai"
+    (order) => order.status === "diantar"
   );
   const semuaOrders = (orders || []).filter(
-    (order) => order.status === "selesai" || order.status === "menunggu"
+    (order) => order.status === "diantar" || order.status === "menunggu"
   );
 
   const alphabet = "BCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -245,7 +245,7 @@ const MapView = ({ orders }) => {
       )}`;
       console.log("🗺️ Rute Google Maps:", googleMapsUrl);
 
-      setrouteSelesai([...fixedToStart, ...fullRoute]);
+      setrouteDiantar([...fixedToStart, ...fullRoute]);
       setGoogleMapsSelsaiUrl(googleMapsUrl);
       setLoading(false);
     };
@@ -313,7 +313,7 @@ const MapView = ({ orders }) => {
       )}`;
       console.log("🗺️ SEMUA RUTE:", googleMapsUrl);
 
-      setrouteSelesai([...fixedToStart, ...fullRoute]);
+      setrouteDiantar([...fixedToStart, ...fullRoute]);
       setGoogleMapsSemuaUrl(googleMapsUrl);
       setLoading(false);
     };
@@ -363,7 +363,7 @@ const MapView = ({ orders }) => {
               }
               className="block bg-green-600 text-white w-32 py-3 rounded hover:bg-green-700 transition shadow"
             >
-              Rute Selesai
+              Rute Diantar
             </button>
           )}
           {googleMapsSemuaUrl && (
@@ -406,8 +406,8 @@ const MapView = ({ orders }) => {
             icon={iconSelesai}
           />
         ))}
-        {routeSelesai.length > 0 && (
-          <Polyline positions={routeSelesai} color="green" weight={4} />
+        {routeDiantar.length > 0 && (
+          <Polyline positions={routeDiantar} color="#10B981" weight={4} />
         )}
         {routeMenunggu.length > 0 && (
           <Polyline positions={routeMenunggu} color="blue" weight={4} />

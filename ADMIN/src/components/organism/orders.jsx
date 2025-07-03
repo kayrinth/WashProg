@@ -28,7 +28,7 @@ export default function Orders() {
 
   async function handleUpdateStatus(orderId, status) {
     try {
-      const res = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
+      const res = await fetch(`${API_BASE_URL}/orders/status/${orderId}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -50,14 +50,42 @@ export default function Orders() {
     }
   }
 
+  async function handleUpdatePaymentStatus(orderId, paymentStatus) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/orders/payment/${orderId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ paymentStatus }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(`Status pembayaran berhasil diubah menjadi "${paymentStatus}"`);
+        fetchOrders();
+      } else {
+        console.error(data);
+        alert(data.message || "Gagal mengubah status pembayaran");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan");
+    }
+  }
+
   useEffect(() => {
     fetchOrders();
   }, []);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">Daftar Pesanan</h1>
-      <OrderTable orders={orders} onUpdateStatus={handleUpdateStatus} />
+    <div className="p-6 mx-auto">
+      <h1 className="text-2xl font-semibold mb-4 ml-1">Daftar Pesanan</h1>
+      <OrderTable
+        orders={orders}
+        onUpdateStatus={handleUpdateStatus}
+        onUpdatePaymentStatus={handleUpdatePaymentStatus}
+      />
     </div>
   );
 }
