@@ -166,7 +166,7 @@ const OrderTable = ({ orders = [], onUpdateStatus, onUpdatePaymentStatus }) => {
                       </td>
                       <td className="py-4 px-6">
                         <span
-                          className={`inline-flex justify-center  px-3 py-1 rounded-full text-xs font-medium border w-20 ${getStatusClass(
+                          className={`inline-flex justify-center  px-3 py-1 rounded-full text-xs font-medium border w-24 ${getStatusClass(
                             order.paymentStatus
                           )}`}
                         >
@@ -175,7 +175,7 @@ const OrderTable = ({ orders = [], onUpdateStatus, onUpdatePaymentStatus }) => {
                       </td>
                       <td className="py-4 px-6">
                         <span
-                          className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium border  ${getStatusClass(
+                          className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium border w-24 ${getStatusClass(
                             order.status
                           )}`}
                         >
