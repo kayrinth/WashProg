@@ -54,5 +54,5 @@ npm run dev
 # atau
 php artisan serve
 
-# 6. Buka http://localhost:8000
+# 6. Buka http://localhost:5173 atau 5174
 ```
