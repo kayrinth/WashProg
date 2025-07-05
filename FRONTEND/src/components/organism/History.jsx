@@ -30,7 +30,7 @@ export default function History() {
 
   async function handleUpdateStatus(orderId, status) {
     try {
-      const res = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
+      const res = await fetch(`${API_BASE_URL}/orders/status/${orderId}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export default function History() {
   }, []);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 mx-auto">
       <h1 className="text-2xl font-semibold mb-4">Riwayat Pesanan</h1>
       <HistoryTable orders={orders} onUpdateStatus={handleUpdateStatus} />
     </div>
