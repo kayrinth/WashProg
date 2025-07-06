@@ -83,5 +83,5 @@ LoginForm.propTypes = {
     password: PropTypes.string.isRequired,
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
-  openRegister: PropTypes.func.isRequired,
+  openSendOTP: PropTypes.func.isRequired,
 };
