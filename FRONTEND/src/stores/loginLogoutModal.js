@@ -7,7 +7,9 @@ import "react-toastify/dist/ReactToastify.css";
 export const useLoginModal = () => {
   const navigate = useNavigate();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isSendOTPOpen, setisSendOTPOpen] = useState(false);
+  const [isConfirmOTPOpen, setisConfirmOTPOpen] = useState(false);
+  const [isRegisterOpen, setisRegisterOpen] = useState(false);
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
@@ -36,17 +38,27 @@ export const useLoginModal = () => {
 
   const openLogin = () => {
     setIsLoginOpen(true);
-    setIsRegisterOpen(false);
+    setisSendOTPOpen(false);
+  };
+
+  const openSendOTP = () => {
+    setisSendOTPOpen(true);
+    setIsLoginOpen(false);
+  };
+
+  const openConfirmOTP = () => {
+    setisConfirmOTPOpen(true);
+    setisSendOTPOpen(false);
   };
 
   const openRegister = () => {
-    setIsRegisterOpen(true);
-    setIsLoginOpen(false);
+    setisRegisterOpen(true);
+    setisConfirmOTPOpen(false);
   };
 
   const closeAllModals = () => {
     setIsLoginOpen(false);
-    setIsRegisterOpen(false);
+    setisSendOTPOpen(false);
   };
 
   const handlePesanClick = (e) => {
@@ -78,18 +90,22 @@ export const useLoginModal = () => {
 
   return {
     isLoginOpen,
+    isSendOTPOpen,
+    isConfirmOTPOpen,
     isRegisterOpen,
     loginData,
     registerData,
     openLogin,
     openRegister,
+    openSendOTP,
+    openConfirmOTP,
     closeAllModals,
     handleLoginInputChange,
     handleRegisterInputChange,
     handlePesanClick,
     onGoogleSignIn,
     setIsLoginOpen,
-    setIsRegisterOpen,
+    setisSendOTPOpen,
     logout,
   };
 };

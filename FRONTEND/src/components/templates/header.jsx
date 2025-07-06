@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import { logo } from "../../assets";
-import { LoginForm, RegisterForm } from "../molecules";
+import {
+  LoginForm,
+  RegisterForm,
+  SendOTPForm,
+  ConfirmOTPForm,
+} from "../molecules";
 import useAuthStore from "../../stores/useAuthStore";
 import { useLoginModal } from "../../stores/loginLogoutModal";
 
@@ -13,10 +18,14 @@ export default function Header() {
 
   const {
     isLoginOpen,
+    isSendOTPOpen,
+    isConfirmOTPOpen,
     isRegisterOpen,
     loginData,
     registerData,
     openLogin,
+    openSendOTP,
+    openConfirmOTP,
     openRegister,
     closeAllModals,
     handleLoginInputChange,
@@ -186,13 +195,32 @@ export default function Header() {
           handleInputChange={handleLoginInputChange}
           onGoogleSignIn={onGoogleSignIn}
           onClose={closeAllModals}
+          openSendOTP={openSendOTP}
+        />
+      )}
+
+      {isSendOTPOpen && (
+        <SendOTPForm
+          registerData={registerData}
+          handleInputChange={handleRegisterInputChange}
+          onClose={closeAllModals}
+          openConfirmOTP={openConfirmOTP}
+        />
+      )}
+
+      {isConfirmOTPOpen && (
+        <ConfirmOTPForm
+          registerData={registerData}
+          handleInputChange={handleRegisterInputChange}
+          onClose={closeAllModals}
           openRegister={openRegister}
         />
       )}
+
       {isRegisterOpen && (
         <RegisterForm
           registerData={registerData}
-          handleChange={handleRegisterInputChange}
+          handleInputChange={handleRegisterInputChange}
           onClose={closeAllModals}
         />
       )}

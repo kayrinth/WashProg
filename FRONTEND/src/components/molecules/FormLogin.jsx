@@ -11,21 +11,31 @@ export default function LoginForm({
   loginData,
   handleInputChange,
   onClose,
-  openRegister,
+  openSendOTP,
 }) {
   const setUser = useAuthStore((state) => state.setUser);
 
   const handleLogin = async () => {
     try {
+      const phoneToSend = loginData.phoneNumber.startsWith("0")
+        ? "+62" + loginData.phoneNumber.slice(1)
+        : "+62" + loginData.phoneNumber;
+
+      const payload = {
+        ...loginData,
+        phoneNumber: phoneToSend,
+      };
+
       const res = await fetch(`${API_BASE_URL}/user/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
+        body: JSON.stringify(payload),
       });
 
-      console.log("API_BASE_URL:", API_BASE_URL); // Debug log
-      console.log("Login data:", loginData); // Debug log
+      console.log("API_BASE_URL:", API_BASE_URL);
+      console.log("Login data:", payload);
       console.log("Response status:", res.status);
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Login gagal");
 
@@ -69,12 +79,18 @@ export default function LoginForm({
         <h2 className="text-xl font-semibold mb-4">Login</h2>
 
         <Input
-          type="text"
+          type="tel"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          maxLength={15}
           name="phoneNumber"
           value={loginData.phoneNumber}
-          placeholder="Nomor Whatsapp"
-          onChange={handleInputChange}
-          className="w-full p-2 border rounded mb-2"
+          onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, "");
+            handleInputChange({ target: { name: "phoneNumber", value } });
+          }}
+          placeholder="0812XXXXXXXX"
+          className="w-full p-2 mb-2 border rounded"
         />
         <Input
           type="password"
@@ -93,7 +109,7 @@ export default function LoginForm({
         </button>
         <button
           className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800"
-          onClick={openRegister}
+          onClick={openSendOTP}
         >
           Registrasi
         </button>
@@ -127,5 +143,5 @@ LoginForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   onGoogleSignIn: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  openRegister: PropTypes.func.isRequired,
+  openSendOTP: PropTypes.func.isRequired,
 };

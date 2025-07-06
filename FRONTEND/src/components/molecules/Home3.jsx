@@ -13,7 +13,7 @@ export default function Home3() {
     handleRegisterInputChange,
     handlePesanClick,
     onGoogleSignIn,
-    openRegister,
+    openSendOTP,
   } = useLoginModal();
 
   return (
@@ -47,7 +47,7 @@ export default function Home3() {
           handleInputChange={handleLoginInputChange}
           onGoogleSignIn={onGoogleSignIn}
           onClose={closeAllModals}
-          openRegister={openRegister}
+          openSendOTP={openSendOTP}
         />
       )}
 
