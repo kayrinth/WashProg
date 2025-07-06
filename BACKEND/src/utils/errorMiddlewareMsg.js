@@ -3,6 +3,7 @@ const errorName = {
   NOT_FOUND: "NOT_FOUND",
   UNAUTHORIZED: "UNAUTHORIZED",
   CONFLICT: "CONFLICT",
+  TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS",
 };
 
 const errorMsg = {

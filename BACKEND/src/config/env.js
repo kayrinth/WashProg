@@ -7,4 +7,6 @@ module.exports = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  wablasToken: process.env.WABLAS_TOKEN,
+  wablasKey: process.env.WABLAS_KEY,
 };

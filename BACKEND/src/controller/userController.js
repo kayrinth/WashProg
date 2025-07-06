@@ -2,7 +2,7 @@ const fs = require("fs");
 const ResponseAPI = require("../utils/response");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { User, OTP } = require("../models");
 const env = require("../config/env");
 const { errorMsg, errorName } = require("../utils/errorMiddlewareMsg");
 require("dotenv").config();
@@ -11,12 +11,53 @@ const { google } = require("googleapis");
 
 const userController = {
   // **Register User**
+  // async register(req, res, next) {
+  //   try {
+  //     const { name, phoneNumber, password } = req.body;
+
+  //     const findUser = await User.findOne({ phoneNumber });
+
+  //     if (findUser) {
+  //       return next({
+  //         name: errorName.CONFLICT,
+  //         message: errorMsg.USER_ALREADY_EXISTS,
+  //       });
+  //     }
+
+  //     const hashedPassword = await bcrypt.hash(password, 10);
+
+  //     const newUser = await User.create({
+  //       name,
+  //       password: hashedPassword,
+  //       phoneNumber,
+  //       joinAt: new Date(),
+  //     });
+
+  //     ResponseAPI.success(res, {
+  //       user: {
+  //         id: newUser._id,
+  //         name: newUser.name,
+  //         phoneNumber: newUser.phoneNumber,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // },
+
   async register(req, res, next) {
     try {
       const { name, phoneNumber, password } = req.body;
 
-      const findUser = await User.findOne({ phoneNumber });
+      // Format phone number
+      const formattedPhone = phoneNumber.startsWith("+62")
+        ? phoneNumber
+        : `+62${
+            phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber
+          }`;
 
+      // Check if user already exists
+      const findUser = await User.findOne({ phoneNumber: formattedPhone });
       if (findUser) {
         return next({
           name: errorName.CONFLICT,
@@ -24,20 +65,47 @@ const userController = {
         });
       }
 
+      // Verify OTP before registration
+      const otpRecord = await OTP.findOne({
+        phoneNumber: formattedPhone,
+        verified: true,
+        expiresAt: { $gt: new Date() },
+      });
+
+      if (!otpRecord) {
+        return next({
+          name: errorName.UNAUTHORIZED,
+          message:
+            "OTP belum diverifikasi atau sudah kadaluarsa. Silakan verifikasi OTP terlebih dahulu.",
+        });
+      }
+
+      console.log("Password untuk hashing:", password);
+
+      // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      console.log("Password berhasil di-hash:", hashedPassword);
+
+      // Create new user
       const newUser = await User.create({
         name,
         password: hashedPassword,
-        phoneNumber,
+        phoneNumber: formattedPhone,
         joinAt: new Date(),
+        isVerified: true,
       });
 
+      // Delete OTP record after successful registration
+      await OTP.deleteOne({ phoneNumber: formattedPhone });
+
       ResponseAPI.success(res, {
+        message: "Registrasi berhasil!",
         user: {
           id: newUser._id,
           name: newUser.name,
           phoneNumber: newUser.phoneNumber,
+          isVerified: newUser.isVerified,
         },
       });
     } catch (error) {
