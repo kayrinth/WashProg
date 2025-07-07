@@ -335,15 +335,24 @@ const userController = {
   // Update User
   async updateProfile(req, res, next) {
     const userId = req.params.id;
+
     try {
-      const { name, email, phoneNumber, password } = req.body;
+      const { name, password } = req.body;
       const findUser = await User.findById(userId);
 
-      if (req.body.password) findUser.password = password;
+      if (!findUser) {
+        return res.status(404).json({ error: "User tidak ditemukan" });
+      }
+
+      if (password) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        findUser.password = hashedPassword;
+      }
+
       if (name) findUser.name = name;
-      if (email) findUser.email = email;
-      if (phoneNumber) findUser.phoneNumber = phoneNumber;
+
       await findUser.save();
+
       ResponseAPI.success(res, findUser);
     } catch (error) {
       next(error);
