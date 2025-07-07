@@ -58,7 +58,27 @@ export default function History() {
 
   return (
     <div className="p-6 mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">Riwayat Pesanan</h1>
+      <div className="ml-2 flex items-center mb-4">
+        <button className="mr-4" onClick={() => window.history.back()}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
+        </button>
+        <h1 className="text-2xl font-semibold text-center w-full">
+          Riwayat Pesanan
+        </h1>
+      </div>
       <HistoryTable orders={orders} onUpdateStatus={handleUpdateStatus} />
     </div>
   );

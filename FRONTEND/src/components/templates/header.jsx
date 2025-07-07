@@ -93,16 +93,22 @@ export default function Header() {
                     Riwayat Pesanan
                   </a>
                   <a
-                    href="/edit-profile"
+                    href="/profile"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                  >
+                    Profil
+                  </a>
+                  {/* <a
+                    href="/history"
                     className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                   >
                     Edit Profil
-                  </a>
+                  </a> */}
                   <button
                     onClick={logout}
                     className="w-full text-left block px-4 py-2 text-gray-800 hover:bg-gray-100"
                   >
-                    Logout
+                    Keluar
                   </button>
                 </div>
               )}
@@ -112,7 +118,7 @@ export default function Header() {
               className="bg-[#068FFF] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
               onClick={openLogin}
             >
-              Login
+              Masuk
             </button>
           )}
         </div>
@@ -136,16 +142,16 @@ export default function Header() {
                     Riwayat Pesanan
                   </a>
                   <a
-                    href="/edit-profile"
+                    href="/profile"
                     className="block px-4 py-1 text-gray-800 hover:bg-gray-100"
                   >
-                    Edit Profil
+                    Profil
                   </a>
                   <button
                     onClick={logout}
                     className="block px-4 py-1  hover:bg-gray-100 bg-red-500 text-white rounded-md"
                   >
-                    Logout
+                    Keluar
                   </button>
                 </div>
               )}
@@ -183,7 +189,7 @@ export default function Header() {
                 className="bg-[#068FFF] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
                 onClick={openLogin}
               >
-                Login
+                Masuk
               </button>
             )}
           </div>

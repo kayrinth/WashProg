@@ -76,7 +76,7 @@ export default function RegisterForm({
         />
 
         <Input
-          type="text"
+          type="password"
           name="password"
           value={registerData.password}
           placeholder="Password"
