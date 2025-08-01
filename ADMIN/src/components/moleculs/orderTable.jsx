@@ -34,6 +34,11 @@ const OrderTable = ({ orders = [], onUpdateStatus, onUpdatePaymentStatus }) => {
     }
   };
 
+  // Helper function untuk mengecek apakah pembayaran belum lunas
+  const isBelumLunas = (paymentStatus) => {
+    return paymentStatus !== "lunas";
+  };
+
   return (
     <div className="w-full rounded-2xl">
       {/* TABEL - Desktop only */}
@@ -226,21 +231,21 @@ const OrderTable = ({ orders = [], onUpdateStatus, onUpdatePaymentStatus }) => {
                           </button>
                           <div className="border-t pt-2">
                             <p className="text-xs text-gray-500 mb-1">
-                              Pembayaran
+                              konfirmasi
                             </p>
 
                             <button
                               className={`inline-flex items-center justify-center w-full px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
-                                order.status === "belum lunas"
-                                  ? " bg-green-100 text-green-800 hover:bg-green-200 border border-green-200"
+                                isBelumLunas(order.paymentStatus)
+                                  ? "bg-green-100 text-green-800 hover:bg-green-200 border border-green-200"
                                   : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
                               }`}
                               onClick={() =>
                                 onUpdatePaymentStatus(order._id, "lunas")
                               }
-                              disabled={order.status !== "belum lunas"}
+                              disabled={!isBelumLunas(order.paymentStatus)}
                             >
-                              Bayar
+                              Pembayaran
                             </button>
                           </div>
                         </div>
@@ -403,7 +408,15 @@ const OrderTable = ({ orders = [], onUpdateStatus, onUpdatePaymentStatus }) => {
                     Selesai
                   </button>
                 </div>
-                <button className="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl text-sm font-medium bg-green-100 text-green-800 hover:bg-green-200 border border-green-200 transition-all duration-200">
+                <button
+                  className={`w-full inline-flex items-center justify-center px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    isBelumLunas(order.paymentStatus)
+                      ? "bg-green-100 text-green-800 hover:bg-green-200 border border-green-200"
+                      : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                  }`}
+                  onClick={() => onUpdatePaymentStatus(order._id, "lunas")}
+                  disabled={!isBelumLunas(order.paymentStatus)}
+                >
                   Konfirmasi Pembayaran
                 </button>
               </div>

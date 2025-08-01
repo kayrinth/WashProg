@@ -349,7 +349,7 @@ const MapView = ({ orders }) => {
               }
               className=" text-white block bg-blue-600 w-32 py-4 rounded hover:bg-blue-700 transition shadow"
             >
-              Rute Menunggu
+              Rute Pick Up
             </button>
           )}
           {googleMapsSelsaiUrl && (
@@ -363,7 +363,7 @@ const MapView = ({ orders }) => {
               }
               className="block bg-green-600 text-white w-32 py-3 rounded hover:bg-green-700 transition shadow"
             >
-              Rute Diantar
+              Rute Delivery
             </button>
           )}
           {googleMapsSemuaUrl && (

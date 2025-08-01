@@ -11,17 +11,9 @@ export default function LoginPage() {
     setLoginData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const openSendOTP = () => {
-    alert("Navigasi ke halaman register");
-  };
-
   return (
     <div>
-      <LoginForm
-        loginData={loginData}
-        handleInputChange={handleInputChange}
-        openSendOTP={openSendOTP}
-      />
+      <LoginForm loginData={loginData} handleInputChange={handleInputChange} />
     </div>
   );
 }

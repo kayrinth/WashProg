@@ -7,14 +7,20 @@ import useAuthStore from "../../stores/useAuthStore"; // import useAuthStore
 const menuItems = [
   { name: "Beranda", path: "/dashboard", icon: <Home size={20} /> },
   { name: "Pelanggan", path: "/users", icon: <Users size={20} /> },
+  { name: "Buat Pesanan", path: "/orders/new", icon: <Users size={20} /> },
   { name: "Pesanan", path: "/orders", icon: <Package size={20} /> },
+  {
+    name: "Pesanan Offline",
+    path: "/orders/admin",
+    icon: <Package size={20} />,
+  },
   { name: "Map", path: "/maps", icon: <Map size={20} /> },
 ];
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const logout = useAuthStore((state) => state.logout); // ambil action logout dari store
+  const logout = useAuthStore((state) => state.logout);
 
   const handleLogout = () => {
     logout();
@@ -50,6 +56,7 @@ export default function Sidebar() {
             <NavLink
               key={item.name}
               to={item.path}
+              end={item.path === "/orders"}
               className={({ isActive }) =>
                 `flex items-center px-4 py-2 rounded-lg transition ${
                   isActive ? "bg-gray-700" : "hover:bg-gray-800"
