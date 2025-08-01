@@ -2,7 +2,7 @@ const fs = require("fs");
 const ResponseAPI = require("../utils/response");
 const { Order, OrderItem, Service } = require("../models");
 const { errorMsg, errorName } = require("../utils/errorMiddlewareMsg");
-const { getAll } = require("./userController");
+const { gdeetAll } = require("./userController");
 require("dotenv").config();
 
 const orderController = {
@@ -12,14 +12,6 @@ const orderController = {
 
       let totalPrice = 0;
       let orderItems = [];
-
-      // Validasi input
-      // if (!services || !Array.isArray(services) || services.length === 0) {
-      //   return res.status(400).json({
-      //     status: "error",
-      //     message: "services harus berupa array dan tidak boleh kosong",
-      //   });
-      // }
 
       // Membuat order baru
       let order = new Order({
@@ -84,9 +76,73 @@ const orderController = {
     }
   },
 
+  async createAdmin(req, res, next) {
+    try {
+      const { services, name, phoneNumber } = req.body;
+
+      let totalPrice = 0;
+      let orderItems = [];
+
+      const formattedPhone = phoneNumber.startsWith("+62")
+        ? phoneNumber
+        : `+62${
+            phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber
+          }`;
+
+      let order = new Order(req.body);
+
+      // Simpan dulu order
+      await order.save();
+
+      // Membuat order items dan menghitung total price
+      for (let service of services) {
+        const foundService = await Service.findById(service.serviceId);
+
+        // Menghitung subTotal untuk masing-masing layanan
+        const subTotal = foundService.price * service.quantity;
+        totalPrice += subTotal;
+
+        // Membuat OrderItem
+        const orderItem = new OrderItem({
+          name,
+          phoneNumber: formattedPhone,
+          orderId: order._id,
+          services: service.serviceId,
+          quantity: service.quantity,
+          subTotal,
+          items: service.items,
+        });
+
+        // Simpan OrderItem
+        await orderItem.save();
+
+        // Masukkan order item ke dalam array orderItems
+        orderItems.push(orderItem._id);
+      }
+
+      // Update order dengan order items dan totalPrice yang baru
+      order.itemsId = orderItems;
+      order.totalPrice = totalPrice;
+      await order.save();
+
+      const populatedOrder = await Order.findById(order._id).populate({
+        path: "itemsId",
+        populate: {
+          path: "services",
+          select: "title price",
+        },
+      });
+
+      ResponseAPI.success(res, populatedOrder);
+    } catch (error) {
+      console.error("Error dalam create order:", error);
+      next(error);
+    }
+  },
+
   async getAll(req, res, next) {
     try {
-      const orders = await Order.find()
+      const orders = await Order.find({ userId: { $ne: null } })
         .populate("userId", "name")
         .populate({
           path: "itemsId",
@@ -101,11 +157,27 @@ const orderController = {
     }
   },
 
+  async getAdmin(req, res, next) {
+    try {
+      const orders = await Order.find({ userId: null }).populate({
+        path: "itemsId",
+        populate: {
+          path: "services",
+          select: "title",
+        },
+      });
+      ResponseAPI.success(res, orders);
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async getByUser(req, res, next) {
     try {
       const userId = req.user._id;
 
       const findOrdersByUser = await Order.find({ userId: userId })
+        .sort({ createdAt: -1 })
         .populate("userId", "name")
         .populate({
           path: "itemsId",

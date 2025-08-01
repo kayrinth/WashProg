@@ -17,7 +17,7 @@ class WablastService {
       payload.append("phone", formattedPhone);
       payload.append(
         "message",
-        `Kode OTP Anda: ${otpCode}\nJangan berikan kode ini ke siapapun.`
+        `*Kode OTP Anda: ${otpCode}*\nJangan berikan kode ini ke siapapun!\n_Kode OTP ini hanya berlaku selama 5 menit._\n\n_Pesan ini dikirim otomatis oleh sistem, mohon tidak dibalas._`
       );
 
       const response = await axios.post(

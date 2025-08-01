@@ -10,6 +10,12 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "User",
     },
+    name: {
+      type: String,
+    },
+    phoneNumber: {
+      type: String,
+    },
     itemsId: [
       {
         type: mongoose.Types.ObjectId,
@@ -17,14 +23,8 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     status: {
-      type: String,
-      enum: [
-        "menunggu",
-        "diproses",
-        "selesai",
-        "diantar",
-        "dibatalkan",
-      ],
+      type: String, 
+      enum: ["menunggu", "diproses", "selesai", "diantar", "dibatalkan"],
       default: "menunggu",
     },
     totalPrice: {
@@ -37,15 +37,15 @@ const orderSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: true,
+      // required: true,
     },
     lat: {
       type: Number,
-      required: true,
+      //required: true,
     },
     lng: {
       type: Number,
-      required: true,
+      //required: true,
     },
     paymentStatus: {
       type: String,

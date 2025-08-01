@@ -10,41 +10,6 @@ const oauth2Client = require("../config/googleAuth");
 const { google } = require("googleapis");
 
 const userController = {
-  // **Register User**
-  // async register(req, res, next) {
-  //   try {
-  //     const { name, phoneNumber, password } = req.body;
-
-  //     const findUser = await User.findOne({ phoneNumber });
-
-  //     if (findUser) {
-  //       return next({
-  //         name: errorName.CONFLICT,
-  //         message: errorMsg.USER_ALREADY_EXISTS,
-  //       });
-  //     }
-
-  //     const hashedPassword = await bcrypt.hash(password, 10);
-
-  //     const newUser = await User.create({
-  //       name,
-  //       password: hashedPassword,
-  //       phoneNumber,
-  //       joinAt: new Date(),
-  //     });
-
-  //     ResponseAPI.success(res, {
-  //       user: {
-  //         id: newUser._id,
-  //         name: newUser.name,
-  //         phoneNumber: newUser.phoneNumber,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // },
-
   async register(req, res, next) {
     try {
       const { name, phoneNumber, password } = req.body;
@@ -152,7 +117,7 @@ const userController = {
       if (user.role !== "user") {
         return next({
           name: errorName.FORBIDDEN,
-          message: "Access denied. Admin privileges required.",
+          message: "Access denied. user privileges required.",
         });
       }
 

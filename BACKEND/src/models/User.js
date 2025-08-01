@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    // phoneNumber: {
+    //   type: mongoose.Types.ObjectId,
+    //   ref: "OTP",
+    //   required: [true, "Nomor Telepon Wajib Diisi"],
+    // },
     googleId: {
       type: String,
       sparse: true,
@@ -58,15 +63,14 @@ userSchema.pre("save", async function (next) {
 const User = mongoose.model("User", userSchema);
 module.exports = User;
 
-
-    // email: {
-    //   type: String,
-    //   required: [true, "Email Wajib Diisi"],
-    //   unique: true,
-    //   trim: true,
-    //   lowercase: true,
-    //   match: [
-    //     /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-    //     "Mohon Masukkan Email Yang Valid",
-    //   ],
-    // },
+// email: {
+//   type: String,
+//   required: [true, "Email Wajib Diisi"],
+//   unique: true,
+//   trim: true,
+//   lowercase: true,
+//   match: [
+//     /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+//     "Mohon Masukkan Email Yang Valid",
+//   ],
+// },
