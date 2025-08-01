@@ -27,7 +27,7 @@ export default function Home3() {
             </h1>
             <p className="text-lg max-w-2xl mx-auto">
               Tenang WashProg memiliki layanan pick up dan delevery untuk area
-              Sleman dan Yogyakarta
+              Sleman
             </p>
           </div>
           <a

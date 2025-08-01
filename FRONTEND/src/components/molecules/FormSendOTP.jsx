@@ -26,7 +26,7 @@ export default function SendOTPForm({
 
       const { phoneNumber } = data.data;
       localStorage.setItem("phoneNumber", phoneNumber);
-      localStorage.setItem("otpSent", "true"); 
+      localStorage.setItem("otpSent", "true");
 
       toast.success("Send OTP berhasil!");
 
@@ -36,7 +36,6 @@ export default function SendOTPForm({
       console.error("Send OTP error:", err.message);
       toast.error("Send OTP gagal!");
     }
-  
   };
 
   return (
@@ -65,13 +64,6 @@ export default function SendOTPForm({
           onClick={handleSendOTP}
         >
           Kirim OTP
-        </button>
-
-        <button
-          className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800 mb-2"
-          onClick={handleSendOTP}
-        >
-          Masukan OTP
         </button>
 
         <button className="text-gray-500 hover:text-gray-700" onClick={onClose}>

@@ -8,6 +8,9 @@ export default function Order() {
   const [selectedService, setSelectedService] = useState(null);
   const [inputName, setInputName] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [inputError, setInputError] = useState("");
+  const [categoryError, setCategoryError] = useState("");
+  const [serviceError, setServiceError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,7 +36,22 @@ export default function Order() {
   };
 
   const handleAddToCart = () => {
-    if (!selectedService || inputName.trim() === "") return;
+    if (!selectedCategoryId) {
+      setCategoryError("Pilih category terlebih dahulu.");
+      return;
+    } else if (!selectedService) {
+      setServiceError("Pilih layanan terlebih dahulu.");
+      return;
+    } else {
+      setCategoryError("");
+    }
+
+    if (inputName.trim() === "") {
+      setInputError("Nama item wajib diisi");
+      return;
+    } else {
+      setInputError("");
+    }
 
     const uniqueKey = `${selectedService._id}-${inputName
       .trim()
@@ -62,6 +80,10 @@ export default function Order() {
       localStorage.setItem("cartItems", JSON.stringify(newItems));
       return newItems;
     });
+
+    // Optional: Reset input
+    setInputName("");
+    setSelectedService(null);
   };
 
   const handleClick = () => {
@@ -103,17 +125,44 @@ export default function Order() {
           </div>
 
           <div className="space-y-6">
-            <SelectCategory onCategorySelect={handleCategorySelect} />
-            <SelectService
-              categoryId={selectedCategoryId}
-              onAddToCart={(service) => setSelectedService(service)}
-            />
-            <InputNameItems inputName={inputName} setInputName={setInputName} />
+            <div>
+              <SelectCategory onCategorySelect={handleCategorySelect} />
+              {categoryError && (
+                <p className="text-red-500 text-sm mt-1">{categoryError}</p>
+              )}
+            </div>
+            <div>
+              <SelectService
+                categoryId={selectedCategoryId}
+                onAddToCart={(service) => {
+                  setSelectedService(service);
+                  setServiceError("");
+                }}
+              />
+              {serviceError && (
+                <p className="text-red-500 text-sm mt-1">{serviceError}</p>
+              )}
+            </div>
+
+            <div>
+              <InputNameItems
+                inputName={inputName}
+                setInputName={(value) => {
+                  setInputName(value);
+                  if (value.trim() !== "") {
+                    setInputError("");
+                  }
+                }}
+              />
+              {inputError && (
+                <p className="text-red-500 text-sm mt-1">{inputError}</p>
+              )}
+            </div>
 
             <div className="pt-4">
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-[#4E4FEB] text-white text-lg py-2 rounded-lg shadow-md hover:bg-opacity-50 transition-all"
+                className="w-full bg-[#068FFF] text-white text-lg py-2 rounded-lg shadow-md hover:bg-opacity-50 transition-all"
               >
                 Pesan
               </button>
