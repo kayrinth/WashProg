@@ -81,7 +81,10 @@ export default function OrdersAdmin() {
 
   return (
     <div className="p-6 mx-auto">
-      <h1 className="text-2xl font-semibold mb-4 ml-1">Daftar Pesanan</h1>
+      <div className="flex flex-col items-start justify-start mt-14 md:mt-0">
+        <h1 className="text-2xl font-semibold mb-1">Daftar Pesanan</h1>
+        <div className=" w-44 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mb-8 md:mb-0"></div>
+      </div>
       <OrderTableAdmin
         orders={orders}
         onUpdateStatus={handleUpdateStatus}

@@ -1,2 +1,3 @@
 import Input from "./dynamicInput";
-export { Input };
+import Pagination from "./pagination";
+export { Input, Pagination };

@@ -1,11 +1,25 @@
 // src/components/OrderResponsive.jsx
 import React from "react";
+import { Pagination, Input } from "../atoms";
 
 const OrderTableAdmin = ({
   orders = [],
   onUpdateStatus,
   onUpdatePaymentStatus,
 }) => {
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [searchTerm, setSearchTerm] = React.useState("");
+
+  const searchOrder = orders.filter(
+    (order) =>
+      (order.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = searchOrder.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleWhatsAppChat = (phoneNumber) => {
     const formattedNumber = phoneNumber.startsWith("0")
       ? `62${phoneNumber.slice(1)}`
@@ -45,13 +59,45 @@ const OrderTableAdmin = ({
     }
   };
 
-  // Helper function untuk mengecek apakah pembayaran belum lunas
   const isBelumLunas = (paymentStatus) => {
     return paymentStatus !== "lunas";
   };
 
   return (
     <div className="w-full rounded-2xl">
+      <div className="mb-4 mt-0 md:mt-4 flex justify-end">
+        <div class="relative md:w-96 w-full">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg
+              class="w-4 h-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+          </div>
+          <Input
+            type="search"
+            id="default-search"
+            className="block w-full p-2.5 ps-10 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-black focus:border-red-ring-black outline-none transition-all duration-200 bg-white text-gray-700"
+            placeholder="Cari nama pelanggan atau nomor telepon....."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
+      </div>
+
       {/* TABEL - Desktop only */}
       <div className="hidden md:block">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
@@ -63,7 +109,7 @@ const OrderTableAdmin = ({
                   <th className="py-4 px-6 text-left font-semibold">
                     Pelanggan
                   </th>
-                  <th className="py-4 px-6 text-left font-semibold">
+                  <th className="py-4 px-6 text-left font-semibold whitespace-nowrap">
                     Nomor Telepon
                   </th>
                   <th className="py-4 px-6 text-left font-semibold">Tanggal</th>
@@ -83,7 +129,7 @@ const OrderTableAdmin = ({
               </thead>
 
               <tbody className="divide-y divide-gray-100">
-                {orders.length === 0 ? (
+                {currentItems.length === 0 ? (
                   <tr>
                     <td
                       colSpan="10"
@@ -97,14 +143,14 @@ const OrderTableAdmin = ({
                     </td>
                   </tr>
                 ) : (
-                  orders.map((order, index) => (
+                  currentItems.map((order, index) => (
                     <tr
                       key={order._id}
                       className="hover:bg-gray-50/50 transition-all duration-200"
                     >
                       <td className="py-4 px-6">
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 font-semibold text-sm">
-                          {index + 1}
+                          {index + 1 + indexOfFirstItem}
                         </div>
                       </td>
                       <td className="py-4 px-6">
@@ -277,11 +323,17 @@ const OrderTableAdmin = ({
             </table>
           </div>
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalItems={orders.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       {/* CARD - Mobile only */}
       <div className="md:hidden space-y-6">
-        {orders.length === 0 ? (
+        {currentItems.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-2xl shadow-lg border border-gray-100">
             <div className="text-4xl mb-4">📋</div>
             <p className="text-lg font-medium text-gray-700 mb-2">
@@ -290,7 +342,7 @@ const OrderTableAdmin = ({
             <p className="text-sm text-gray-500">Pesanan akan muncul di sini</p>
           </div>
         ) : (
-          orders.map((order) => (
+          currentItems.map((order) => (
             <div
               key={order.id}
               className="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300"
@@ -439,6 +491,12 @@ const OrderTableAdmin = ({
             </div>
           ))
         )}
+        <Pagination
+          currentPage={currentPage}
+          totalItems={orders.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

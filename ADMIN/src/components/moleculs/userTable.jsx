@@ -141,16 +141,13 @@ const UserTable = ({ users = [], onDeleteUser }) => {
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border-b border-gray-100">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-14 h-14 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                    <div className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">
                         {user.name}
                       </h3>
-                      <p className="text-sm text-gray-600">
-                        Customer #{index + 1}
-                      </p>
                     </div>
                   </div>
                   <div className="text-right">

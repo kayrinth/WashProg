@@ -1,18 +1,31 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom"; // import useNavigate
-import { Home, Users, Package, Map, Menu, LogOut } from "lucide-react";
+import {
+  Home,
+  Users,
+  Package,
+  Map,
+  Menu,
+  LogOut,
+  ShoppingCart,
+  Store,
+} from "lucide-react";
 import { logo } from "../../assets";
 import useAuthStore from "../../stores/useAuthStore"; // import useAuthStore
 
 const menuItems = [
   { name: "Beranda", path: "/dashboard", icon: <Home size={20} /> },
   { name: "Pelanggan", path: "/users", icon: <Users size={20} /> },
-  { name: "Buat Pesanan", path: "/orders/new", icon: <Users size={20} /> },
+  {
+    name: "Buat Pesanan",
+    path: "/orders/new",
+    icon: <ShoppingCart size={20} />,
+  },
   { name: "Pesanan", path: "/orders", icon: <Package size={20} /> },
   {
     name: "Pesanan Offline",
     path: "/orders/admin",
-    icon: <Package size={20} />,
+    icon: <Store size={20} />,
   },
   { name: "Map", path: "/maps", icon: <Map size={20} /> },
 ];
@@ -79,8 +92,6 @@ export default function Sidebar() {
             Logout
           </button>
         </nav>
-
-        <div className="p-4 border-t border-gray-700 flex-shrink-0"></div>
       </aside>
 
       {isOpen && (
