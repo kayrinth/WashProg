@@ -144,7 +144,7 @@ const MapComponent = ({ onLocationSelect }) => {
     } else {
       setUserAddress("Browser tidak mendukung geolokasi");
     }
-  }, [onLocationSelect]); // ✅ Tambah onLocationSelect ke dependency
+  }, [onLocationSelect]);
 
   return (
     <div className="w-full h-[300px] rounded-lg overflow-hidden border border-gray-300">

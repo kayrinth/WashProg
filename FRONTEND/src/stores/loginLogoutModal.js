@@ -56,6 +56,11 @@ export const useLoginModal = () => {
     setisConfirmOTPOpen(false);
   };
 
+  const goToLogin = () => {
+    setIsLoginOpen(true);
+    setisRegisterOpen(false);
+  };
+
   const closeAllModals = () => {
     setIsLoginOpen(false);
     setisSendOTPOpen(false);
@@ -82,6 +87,9 @@ export const useLoginModal = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("name");
     localStorage.removeItem("token");
+    localStorage.removeItem("phoneNumber");
+    localStorage.removeItem("otpSent");
+    localStorage.removeItem("cartItems");
 
     toast.success("Logout Berhasil!");
     navigate("/");
@@ -96,6 +104,7 @@ export const useLoginModal = () => {
     loginData,
     registerData,
     openLogin,
+    goToLogin,
     openRegister,
     openSendOTP,
     openConfirmOTP,
