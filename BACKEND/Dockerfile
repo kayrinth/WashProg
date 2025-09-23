@@ -1,13 +1,29 @@
-FROM node:18-alpine
+# FROM node:18-alpine
+
+# WORKDIR /app
+
+# COPY package*.json ./
+# RUN npm install --include=dev
+
+# COPY . .
+
+# EXPOSE 5000
+
+# CMD ["npx", "nodemon", "src/index.js"]
+
+
+FROM node:20
 
 WORKDIR /app
 
 COPY package*.json ./
+RUN npm install --legacy-peer-deps
 
-RUN npm install
+# pastikan nodemon ada secara global (tidak tergantung devDependencies)
+RUN npm install -g nodemon
 
 COPY . .
 
-#EXPOSE 3000
+EXPOSE 5000
 
-CMD ["npm", "run", "dev"]
+CMD ["nodemon", "src/index.js"]

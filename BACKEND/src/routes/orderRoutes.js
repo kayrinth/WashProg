@@ -6,8 +6,10 @@ const { orderController } = require("../controller");
 orderRoutes.post("/order", verifyToken, orderController.create);
 orderRoutes.post("/order/admin", verifyToken, orderController.createAdmin);
 orderRoutes.get("/orders", verifyToken, orderController.getAll);
-orderRoutes.get("/orders/admin", verifyToken, orderController.getAdmin);
-orderRoutes.get("/orders/user/", verifyToken, orderController.getByUser);
+orderRoutes.get("/orders-admin", verifyToken, orderController.getAdmin);
+orderRoutes.get("/orders-user", verifyToken, orderController.getByUser);
+orderRoutes.get("/orders-dashboard", verifyToken, orderController.getDashboard);
+orderRoutes.get("/testimonials", orderController.getTestimonials);
 orderRoutes.put(
   "/orders/status/:id",
   verifyToken,
@@ -16,7 +18,12 @@ orderRoutes.put(
 orderRoutes.put(
   "/orders/payment/:id",
   verifyToken,
-  orderController.updateStatusPembayaran
+  orderController.updateStatusPayment
+);
+orderRoutes.put(
+  "/orders/review/:id",
+  verifyToken,
+  orderController.updateReview
 );
 orderRoutes.delete("/order/delete/:id", verifyToken, orderController.delete);
 

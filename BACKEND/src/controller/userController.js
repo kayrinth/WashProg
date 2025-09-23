@@ -113,6 +113,7 @@ const userController = {
         env.jwtSecret,
         { expiresIn: env.jwtExpiresIn }
       );
+      console.log(env.jwtExpiresIn);
 
       if (user.role !== "user") {
         return next({

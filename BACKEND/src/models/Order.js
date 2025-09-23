@@ -9,6 +9,7 @@ const orderSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Types.ObjectId,
       ref: "User",
+      required: false,
     },
     name: {
       type: String,
@@ -23,7 +24,7 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     status: {
-      type: String, 
+      type: String,
       enum: ["menunggu", "diproses", "selesai", "diantar", "dibatalkan"],
       default: "menunggu",
     },
@@ -47,10 +48,17 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       //required: true,
     },
+    method: {
+      type: String,
+      enum: ["online", "offline"],
+    },
     paymentStatus: {
       type: String,
       enum: ["belum lunas", "lunas"],
       default: "belum lunas",
+    },
+    review: {
+      type: String,
     },
     deletedAt: {
       type: Date,

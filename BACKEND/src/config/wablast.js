@@ -46,6 +46,55 @@ class WablastService {
       );
     }
   }
+  async sendMessage(name, services, address, totalPrice, dateOrder) {
+    try {
+      const adminPhone = process.env.ADMIN_PHONE;
+      const formattedPhoneAdmin = adminPhone.replace(/^\+|\s/g, "");
+
+      const payload = new URLSearchParams();
+      payload.append("phone", formattedPhoneAdmin);
+
+      payload.append(
+        "message",
+        `*📦 Pesanan Baru Masuk!*\n\n` +
+          `👤 *Nama Pelanggan:* ${name}\n` +
+          `📌 *Pesanan:*\n${services}\n` +
+          `📍 *Alamat:* ${address}\n` +
+          `💰 *Total Harga:* Rp ${totalPrice}\n` +
+          `🕒 *Tanggal Order:* ${new Date(dateOrder).toLocaleString("id-ID", {
+            timeZone: "Asia/Jakarta",
+          })}\n\n` +
+          `_Segera diproses ya 👍_`
+      );
+
+      const response = await axios.post(
+        `${this.baseURL}/send-message`,
+        payload.toString(),
+        {
+          headers: {
+            Authorization: `${this.token}.${this.secretKey}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          timeout: 5000,
+        }
+      );
+
+      console.log("Response Wablas:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("[WABLAS ERROR DETAILS]:", {
+        url: error.config?.url,
+        status: error.response?.status,
+        data: error.response?.data,
+        request: error.config?.data,
+      });
+      throw new Error(
+        `Gagal mengirim Message: ${
+          error.response?.data?.message || error.message
+        }`
+      );
+    }
+  }
 }
 
 module.exports = new WablastService();

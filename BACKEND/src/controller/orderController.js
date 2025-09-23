@@ -3,6 +3,7 @@ const ResponseAPI = require("../utils/response");
 const { Order, OrderItem, Service } = require("../models");
 const { errorMsg, errorName } = require("../utils/errorMiddlewareMsg");
 const { gdeetAll } = require("./userController");
+const WablastService = require("../config/wablast");
 require("dotenv").config();
 
 const orderController = {
@@ -24,6 +25,8 @@ const orderController = {
         dateOrder: new Date(),
         totalPrice: 0,
         itemsId: [],
+        review: null,
+        method: "online",
       });
 
       // Simpan dulu order
@@ -60,7 +63,7 @@ const orderController = {
       await order.save();
 
       const populatedOrder = await Order.findById(order._id)
-        .populate("userId", "name")
+        .populate("userId", "name phoneNumber")
         .populate({
           path: "itemsId",
           populate: {
@@ -69,7 +72,28 @@ const orderController = {
           },
         });
 
-      ResponseAPI.success(res, populatedOrder);
+      // console.log(populatedOrder);
+      console.log(populatedOrder.userId.phoneNumber);
+      populatedOrder.itemsId.forEach((item) => {
+        console.log("Service:", item.services?.title);
+        console.log("Items:", item.items);
+      });
+
+      await ResponseAPI.success(res, populatedOrder);
+      await WablastService.sendMessage(
+        populatedOrder.userId.name,
+        populatedOrder.itemsId
+          .map(
+            (item, no) =>
+              `${no + 1}. ${item.items} (${item.services.title}) x ${
+                item.quantity
+              } = Rp ${item.subTotal}`
+          )
+          .join("\n"),
+        populatedOrder.address,
+        totalPrice,
+        populatedOrder.dateOrder
+      );
     } catch (error) {
       console.error("Error dalam create order:", error);
       next(error);
@@ -89,9 +113,8 @@ const orderController = {
             phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber
           }`;
 
-      let order = new Order(req.body);
+      let order = new Order({ method: "offline", ...req.body });
 
-      // Simpan dulu order
       await order.save();
 
       // Membuat order items dan menghitung total price
@@ -200,6 +223,88 @@ const orderController = {
     }
   },
 
+  async getDashboard(req, res, next) {
+    try {
+      const startOfToday = new Date();
+      startOfToday.setHours(0, 0, 0, 0);
+      const endOfToday = new Date();
+      endOfToday.setHours(23, 59, 59, 999);
+      const today = new Date();
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(today.getDate() - 6);
+
+      const waitingOrders = await Order.countDocuments({ status: "menunggu" });
+
+      const dailyRevenue = await Order.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: startOfToday, $lte: endOfToday },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$totalPrice" },
+          },
+        },
+      ]);
+
+      const totalOrders = await Order.countDocuments();
+      const totalRevenue = await Order.aggregate([
+        { $group: { _id: null, total: { $sum: "$totalPrice" } } },
+      ]);
+      const revenueLast7Days = await Order.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: sevenDaysAgo },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+            },
+            total: { $sum: "$totalPrice" },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]);
+
+      // ubah ke bentuk array harian (jaga urutan 7 hari)
+      const days = Array.from({ length: 7 }).map((_, i) => {
+        const d = new Date(sevenDaysAgo);
+        d.setDate(sevenDaysAgo.getDate() + i);
+        const key = d.toISOString().slice(0, 10);
+        const found = revenueLast7Days.find((r) => r._id === key);
+        return {
+          date: d.toLocaleDateString("id-ID", {
+            weekday: "short",
+          }),
+          amount: found ? found.total : 0,
+        };
+      });
+
+      const ordersData = await Order.find({ status: "menunggu" })
+        .populate({ path: "userId", select: "name" })
+        .populate({
+          path: "itemsId",
+          populate: { path: "services", select: "title" },
+        })
+        .lean();
+
+      ResponseAPI.success(res, {
+        totalOrders,
+        waitingOrders,
+        dailyRevenue: dailyRevenue.length > 0 ? dailyRevenue[0].total : 0,
+        totalRevenue: totalRevenue.length > 0 ? totalRevenue[0].total : 0,
+        revenueData: days,
+        ordersData,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async updateStatus(req, res, next) {
     try {
       const { id } = req.params;
@@ -224,7 +329,7 @@ const orderController = {
     }
   },
 
-  async updateStatusPembayaran(req, res, next) {
+  async updateStatusPayment(req, res, next) {
     try {
       const { id } = req.params;
       const { paymentStatus } = req.body;
@@ -245,6 +350,48 @@ const orderController = {
       ResponseAPI.success(res, updatedOrder);
     } catch (error) {
       next(error);
+    }
+  },
+
+  async updateReview(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { review } = req.body;
+
+      const updatedOrder = await Order.findByIdAndUpdate(
+        id,
+        { review },
+        { new: true }
+      );
+
+      console.log(req.body);
+      if (!updatedOrder) {
+        return next({
+          name: "NOT_FOUND",
+          message: "Order tidak ditemukan",
+        });
+      }
+
+      ResponseAPI.success(res, updatedOrder);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getTestimonials(req, res) {
+    try {
+      const testimonials = await Order.find({ review: { $ne: null } })
+        .populate("userId", "name")
+        .sort({ createdAt: -1 })
+        .limit(6)
+        .select("review userId");
+
+      res.json({
+        success: true,
+        data: testimonials,
+      });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
     }
   },
 
