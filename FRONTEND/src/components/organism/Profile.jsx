@@ -1,16 +1,20 @@
 import { Input } from "../atoms";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useAuthStore from "../../stores/useAuthStore";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function EditProfile() {
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    phoneNumber: "",
     name: "",
     password: "",
   });
+  const navigate = useNavigate();
+  const { setUser } = useAuthStore();
 
   useEffect(() => {
     const auth = localStorage.getItem("auth");
@@ -55,14 +59,19 @@ export default function EditProfile() {
         body: JSON.stringify(formData),
       });
 
-      console.log("Response status:", parsed?.token);
-
       const data = await res.json();
-      console.log("Full response data:", data);
 
-      if (!res.ok) throw new Error(data.message || "Update gagal");
-
-      toast.success("Update berhasil!");
+      if (res.ok) {
+        setUser(data.data, parsed?.state?.token);
+        setFormData((prev) => ({
+          ...prev,
+          name: data.data?.name || prev.name,
+        }));
+        toast.success("Update berhasil!");
+        navigate("/");
+      } else {
+        toast.error(data.message || "Update gagal!");
+      }
     } catch (err) {
       console.error("Update error:", err.message);
       toast.error("Update gagal!");
@@ -139,7 +148,7 @@ export default function EditProfile() {
 
           <button
             type="submit"
-            className="bg-[#4E4FEB] text-white py-2 px-4 rounded-lg hover:bg-[#7373fd] transition mt-4"
+            className="w-full bg-[#068FFF] text-white py-1 rounded-md text-sm md:text-lg transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-blue-900 hover:to-blue-600hover:shadow-lg hover:shadow-blue-900/50 hover:scale-[1.02] active:scale-[0.98]"
           >
             Simpan Perubahan
           </button>

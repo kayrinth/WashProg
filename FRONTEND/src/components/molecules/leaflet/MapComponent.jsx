@@ -24,6 +24,14 @@ const markerIcon = L.icon({
   popupAnchor: [1, -34],
 });
 
+const redMarkerIcon = L.icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+  shadowUrl: markerShadowPng,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
 //untuk props
 MapClickHandler.propTypes = {
   onMapClick: PropTypes.func.isRequired,
@@ -84,9 +92,9 @@ const MapComponent = ({ onLocationSelect }) => {
   };
 
   const [userPosition, setUserPosition] = useState(null);
-  const [fixedAddress, setFixedAddress] = useState("Mendeteksi alamat...");
+  const fixedAddress = useState("Mendeteksi alamat...");
   const [userAddress, setUserAddress] = useState("Mendeteksi lokasi Anda...");
-  const ZOOM_LEVEL = 17;
+  const ZOOM_LEVEL = 12;
 
   const getAddressFromCoords = async (lat, lng) => {
     try {
@@ -111,59 +119,69 @@ const MapComponent = ({ onLocationSelect }) => {
   };
 
   // Mendapatkan alamat untuk lokasi fixed dan lokasi pengguna saat komponen pertama kali dimuat
-  useEffect(() => {
-    // Ambil alamat lokasi fixed
-    const fetchFixedAddress = async () => {
-      const address = await getAddressFromCoords(
-        fixedPosition.lat,
-        fixedPosition.lng
-      );
-      setFixedAddress(address);
-    };
-    fetchFixedAddress();
+  // useEffect(() => {
+  //   // Ambil alamat lokasi fixed
+  //   const fetchFixedAddress = async () => {
+  //     const address = await getAddressFromCoords(
+  //       fixedPosition.lat,
+  //       fixedPosition.lng
+  //     );
+  //     setFixedAddress(address);
+  //   };
+  //   fetchFixedAddress();
 
-    // Ambil lokasi pengguna jika browser mendukung geolokasi
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const { latitude, longitude } = pos.coords;
-          const userPos = { lat: latitude, lng: longitude };
-          setUserPosition(userPos);
-          const address = await getAddressFromCoords(latitude, longitude);
-          setUserAddress(address);
-          console.log("Lokasi pengguna:", latitude, longitude);
-          if (onLocationSelect) {
-            onLocationSelect(userPos);
-          }
-        },
-        (err) => {
-          console.error("Geolocation error:", err);
-          setUserAddress("Gagal mendapatkan lokasi Anda");
-        }
-      );
-    } else {
-      setUserAddress("Browser tidak mendukung geolokasi");
-    }
-  }, [onLocationSelect]);
+  //   // Ambil lokasi pengguna jika browser mendukung geolokasi
+  //   if ("geolocation" in navigator) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       async (pos) => {
+  //         const { latitude, longitude } = pos.coords;
+  //         const userPos = { lat: latitude, lng: longitude };
+  //         setUserPosition(userPos);
+  //         const address = await getAddressFromCoords(latitude, longitude);
+  //         setUserAddress(address);
+  //         console.log("Lokasi pengguna:", latitude, longitude);
+  //         if (onLocationSelect) {
+  //           onLocationSelect(userPos);
+  //         }
+  //       },
+  //       (error) => {
+  //         console.error("Geolocation error:", error.code, error.message);
+  //         if (error.code === 1) alert("Izin lokasi ditolak");
+  //         if (error.code === 2)
+  //           alert("Lokasi tidak tersedia, coba aktifkan GPS/Wi-Fi");
+  //         if (error.code === 3) alert("Timeout, coba lagi");
+  //         setUserAddress("Gagal mendapatkan lokasi Anda");
+  //       }
+  //     );
+  //   } else {
+  //     setUserAddress("Browser tidak mendukung geolokasi");
+  //   }
+  // }, [onLocationSelect]);
 
   return (
     <div className="w-full h-[300px] rounded-lg overflow-hidden border border-gray-300">
       <MapContainer
         center={userPosition || fixedPosition}
         zoom={ZOOM_LEVEL}
+        minZoom={11}
+        maxZoom={18}
         scrollWheelZoom={true}
         style={{ width: "100%", height: "100%" }}
         className="rounded-lg"
+        maxBounds={[
+          [-7.85, 110.25],
+          [-7.65, 110.55],
+        ]}
+        maxBoundsViscosity={1.0}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-
         <MapClickHandler onMapClick={handleMapClick} />
         <RecenterMap position={userPosition} />
 
-        <Marker position={fixedPosition} icon={markerIcon}>
+        <Marker position={fixedPosition} icon={redMarkerIcon}>
           <Popup>
             📌 WashProg: <br />
             {fixedAddress}

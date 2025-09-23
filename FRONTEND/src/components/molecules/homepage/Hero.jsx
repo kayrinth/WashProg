@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { hero1 } from "../../assets";
+import { hero1 } from "../../../assets";
 
 export default function Hero() {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -15,7 +15,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full overflow-hidden relative flex flex-col items-center justify-center text-center px-6">
+    <div className="md:min-h-screen w-full  overflow-hidden relative flex flex-col items-center justify-center text-center py-20 md:py-0 px-6">
       <div
         className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500 ${
           imageLoaded ? "opacity-100" : "opacity-0"

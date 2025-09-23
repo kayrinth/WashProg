@@ -1,4 +1,12 @@
-import { Hero, Home1, Home2, Home3 } from "../molecules";
+import {
+  Hero,
+  Home1,
+  Home2,
+  Home3,
+  FAQ,
+  Testimonial,
+  Location,
+} from "../molecules";
 
 export default function Home() {
   return (
@@ -6,6 +14,9 @@ export default function Home() {
       <Hero />
       <Home1 />
       <Home2 />
+      <FAQ />
+      <Testimonial />
+      <Location />
       <Home3 />
     </>
   );

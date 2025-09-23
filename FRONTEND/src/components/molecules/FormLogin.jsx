@@ -79,7 +79,7 @@ export default function LoginForm({
       onClose();
     } catch (err) {
       console.error("Login error:", err.message);
-      toast.error("Login gagal!");
+      toast.error("Nomor telepon atau password salah!");
     }
   };
 
@@ -97,7 +97,12 @@ export default function LoginForm({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-        <img src={logo} alt="WashProg Logo" className="w-28 mx-auto mb-4" />
+        <img
+          src={logo}
+          alt="WashProg Logo"
+          className="w-28 mx-auto mb-4"
+          loading="lazy"
+        />
         <h2 className="text-xl font-semibold mb-4">Login</h2>
 
         <div className="mb-2 text-left">
@@ -144,19 +149,29 @@ export default function LoginForm({
         </div>
 
         <button
-          className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800 mb-2"
+          className="relative bg-black text-white px-4 py-2 w-full rounded-md 
+             transition-all duration-300 ease-in-out
+             hover:bg-gradient-to-r hover:from-black hover:to-gray-800
+             hover:shadow-lg hover:shadow-gray-700/50 
+             hover:scale-[1.02] active:scale-[0.98] mb-3"
           onClick={handleLogin}
         >
           Masuk
         </button>
+
         <button
-          className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800"
+          // className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800"
+          className="relative bg-black text-white px-4 py-2 w-full rounded-md 
+             transition-all duration-300 ease-in-out
+             hover:bg-gradient-to-r hover:from-black hover:to-gray-800
+             hover:shadow-lg hover:shadow-gray-700/50 
+             hover:scale-[1.02] active:scale-[0.98]"
           onClick={openSendOTP}
         >
           Registrasi
         </button>
 
-        <div className="my-4 text-gray-500">Atau</div>
+        {/* <div className="my-4 text-gray-500">Atau</div> */}
 
         {/* 
         <button

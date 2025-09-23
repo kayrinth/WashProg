@@ -10,10 +10,10 @@ export default function InputNameItems({ inputName, setInputName }) {
 
       <Input
         type="text"
-        placeholder="New Balance, Puma, dll"
+        placeholder="New Balance (41)"
         value={inputName}
         onChange={(e) => setInputName(e.target.value)}
-        className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 transition duration-200"
+        className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-black transition duration-200"
       />
     </>
   );

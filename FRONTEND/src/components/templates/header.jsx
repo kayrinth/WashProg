@@ -9,7 +9,7 @@ import {
 } from "../molecules";
 import useAuthStore from "../../stores/useAuthStore";
 import { useLoginModal } from "../../stores/loginLogoutModal";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -48,7 +48,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 w-full z-50 py-4 px-6 flex justify-between items-center max-w-7xl mx-auto rounded-b-2xl transition-all duration-300 ${
+        className={`sticky top-0 w-full z-[999] py-4 px-6 flex justify-between items-center max-w-7xl mx-auto rounded-b-2xl transition-all duration-300 ${
           isScrolled && !isOpen ? "shadow-lg backdrop-blur-xl pt-4" : ""
         } ${isOpen ? "bg-white shadow-lg" : ""}`}
       >
@@ -60,22 +60,37 @@ export default function Header() {
             <img src={logo} alt="WashProg" className="h-10" />
           </div>
           <nav className="flex space-x-6 text-black font-medium">
-            <Link to="/" className="hover:text-gray-600">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-bold border-b-2 border-blue-600"
+                  : "text-gray-700 hover:text-blue-600"
+              }
+            >
               Beranda
-            </Link>
-            <Link to="/menu" className="hover:text-gray-600">
+            </NavLink>
+            <NavLink
+              to="/menu"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-bold border-b-2 border-blue-600"
+                  : "text-gray-700 hover:text-blue-600"
+              }
+            >
               Daftar Menu
-            </Link>
-            <Link
-              to="#"
+            </NavLink>
+            <NavLink
+              to="/pesan"
               onClick={handlePesanClick}
-              className="hover:text-gray-600"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-bold border-b-2 border-blue-600"
+                  : "text-gray-700 hover:text-blue-600"
+              }
             >
               Pesan Sekarang
-            </Link>
-            <Link to="#" className="hover:text-gray-600">
-              Tentang Kami
-            </Link>
+            </NavLink>
           </nav>
           {user ? (
             <div className="relative flex items-center gap-2">
@@ -88,18 +103,18 @@ export default function Header() {
 
               {isDropdownOpen && (
                 <div className="absolute top-10 right-0 mt-1 w-40 rounded-md bg-white shadow-lg z-10">
-                  <Link
+                  <NavLink
                     to="/history"
                     className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                   >
                     Riwayat Pesanan
-                  </Link>
-                  <Link
+                  </NavLink>
+                  <NavLink
                     to="/profile"
                     className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                   >
                     Profil
-                  </Link>
+                  </NavLink>
                   {/* <a
                     href="/history"
                     className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
@@ -117,7 +132,11 @@ export default function Header() {
             </div>
           ) : (
             <button
-              className="bg-[#068FFF] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
+              className=" bg-[#068FFF] text-white px-4 py-2 rounded-md 
+             transition-all duration-300 ease-in-out
+             hover:bg-gradient-to-r hover:from-[#068FFF] hover:to-blue-600
+             hover:shadow-lg hover:shadow-blue-900/50 
+             hover:scale-[1.02] active:scale-[0.98]"
               onClick={openLogin}
             >
               Masuk
@@ -137,18 +156,18 @@ export default function Header() {
               {user.name}
               {isDropdownOpen && (
                 <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4 flex flex-col space-y-2 text-center md:hidden">
-                  <Link
+                  <NavLink
                     to="/history"
                     className="block px-4 py-1 text-gray-800 hover:bg-gray-100"
                   >
                     Riwayat Pesanan
-                  </Link>
-                  <Link
+                  </NavLink>
+                  <NavLink
                     to="/profile"
                     className="block px-4 py-1 text-gray-800 hover:bg-gray-100"
                   >
                     Profil
-                  </Link>
+                  </NavLink>
                   <button
                     onClick={logout}
                     className="block px-4 py-1  hover:bg-gray-100 bg-red-500 text-white rounded-md"
@@ -170,22 +189,37 @@ export default function Header() {
 
         {isOpen && (
           <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4 flex flex-col space-y-4 text-center md:hidden">
-            <Link to="/" className="hover:text-gray-600">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-bold"
+                  : "text-gray-700 hover:text-blue-600"
+              }
+            >
               Beranda
-            </Link>
-            <Link to="/menu" className="hover:text-gray-600">
+            </NavLink>
+            <NavLink
+              to="/menu"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-bold"
+                  : "text-gray-700 hover:text-blue-600"
+              }
+            >
               Daftar Menu
-            </Link>
-            <Link
-              to="#"
+            </NavLink>
+            <NavLink
+              to="/pesan"
               onClick={handlePesanClick}
-              className="hover:text-gray-600"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-bold"
+                  : "text-gray-700 hover:text-blue-600"
+              }
             >
               Pesan Sekarang
-            </Link>
-            <Link a="#" className="hover:text-gray-600 ">
-              Tentang Kami
-            </Link>
+            </NavLink>
             {user ? null : (
               <button
                 className="bg-[#068FFF] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"

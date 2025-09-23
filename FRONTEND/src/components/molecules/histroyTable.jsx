@@ -1,6 +1,9 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 
-const HistoryTable = ({ orders = [], onUpdateStatus }) => {
+const HistoryTable = ({ orders = [], onUpdateStatus, onSubmitReview }) => {
+  const [reviewInputs, setReviewInputs] = useState({});
+
   const getStatusClass = (status) => {
     switch (status) {
       case "menunggu":
@@ -30,6 +33,17 @@ const HistoryTable = ({ orders = [], onUpdateStatus }) => {
         return "✅";
       default:
         return "❌";
+    }
+  };
+
+  const handleInputChange = (orderId, value) => {
+    setReviewInputs((prev) => ({ ...prev, [orderId]: value }));
+  };
+
+  const handleSubmit = (orderId) => {
+    if (reviewInputs[orderId]?.trim()) {
+      onSubmitReview(orderId, reviewInputs[orderId]);
+      setReviewInputs((prev) => ({ ...prev, [orderId]: "" }));
     }
   };
 
@@ -194,19 +208,52 @@ const HistoryTable = ({ orders = [], onUpdateStatus }) => {
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex flex-col space-y-2">
-                          <button
-                            className={`inline-flex items-center justify-center w-full px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 w-24${
-                              order.status === "menunggu"
-                                ? " bg-red-100 text-red-800 hover:bg-red-200 border border-red-200"
-                                : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200 w-24"
-                            }`}
-                            onClick={() =>
-                              onUpdateStatus(order._id, "dibatalkan")
-                            }
-                            disabled={order.status !== "menunggu"}
-                          >
-                            Batalkan Pesanan
-                          </button>
+                          {order.status !== "selesai" && (
+                            <button
+                              className={`inline-flex items-center justify-center w-[130px] px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 w-24${
+                                order.status === "menunggu"
+                                  ? " bg-red-100 text-red-800 hover:bg-red-200 border border-red-200"
+                                  : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200 w-24"
+                              }`}
+                              onClick={() =>
+                                onUpdateStatus(order._id, "dibatalkan")
+                              }
+                              disabled={order.status !== "menunggu"}
+                            >
+                              Batalkan Pesanan
+                            </button>
+                          )}
+
+                          {order.status === "selesai" && (
+                            <div className="mt-2">
+                              {order.review ? (
+                                <p className="text-sm text-gray-700 italic">
+                                  {`"${order.review}"`}
+                                </p>
+                              ) : (
+                                <div className="flex flex-col space-y-2">
+                                  <textarea
+                                    rows="3"
+                                    value={reviewInputs[order._id] || ""}
+                                    onChange={(e) =>
+                                      handleInputChange(
+                                        order._id,
+                                        e.target.value
+                                      )
+                                    }
+                                    placeholder="Tulis review..."
+                                    className="w-[210px] border rounded-lg p-2 text-sm"
+                                  />
+                                  <button
+                                    className="w-full bg-green-500 text-white rounded-md text-sm md:text-base transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-green-800 hover:to-blue-600hover:shadow-lg hover:shadow-green-900/50 hover:scale-[1.02] active:scale-[0.98]"
+                                    onClick={() => handleSubmit(order._id)}
+                                  >
+                                    Kirim Review
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -359,4 +406,5 @@ export default HistoryTable;
 HistoryTable.propTypes = {
   orders: PropTypes.array,
   onUpdateStatus: PropTypes.func,
+  onSubmitReview: PropTypes.func,
 };

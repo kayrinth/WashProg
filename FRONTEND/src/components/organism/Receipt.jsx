@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import LoadingOverlay from "../templates/loading";
 import SuccessModal from "../templates/success";
 import ErrorModal from "../templates/error";
+import { Input } from "../atoms";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -173,9 +174,9 @@ export default function Receipt() {
         </>
       )}
 
-      <div className="mt-6">
+      <div className="mt-6 z-50">
         <MapComponent onLocationSelect={handleLocationSelect} />
-        <input
+        <Input
           type="text"
           placeholder="Masukkan Detail Alamat"
           className="w-full p-2 border rounded mt-4"
@@ -197,7 +198,7 @@ export default function Receipt() {
             className={`px-4 py-2 rounded-lg text-white ${
               isSubmitting || cartItems.length === 0 || !selectedLatLng
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#068FFF] hover:bg-[#2d6898]"
+                : "w-full bg-[#068FFF] text-white py-2 rounded-md text-sm md:text-lg transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-[#068FFF] hover:to-blue-600hover:shadow-lg hover:shadow-blue-900/50 hover:scale-[1.02] active:scale-[0.98]"
             }`}
             disabled={isSubmitting || cartItems.length === 0 || !selectedLatLng}
           >

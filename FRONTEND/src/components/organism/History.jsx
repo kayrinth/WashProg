@@ -10,7 +10,7 @@ export default function History() {
 
   async function fetchOrders() {
     try {
-      const res = await fetch(`${API_BASE_URL}/orders/user`, {
+      const res = await fetch(`${API_BASE_URL}/orders-user`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,6 +52,27 @@ export default function History() {
     }
   }
 
+  async function handleSubmitReview(orderId, review) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/orders/review/${orderId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ review }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchOrders(); // refresh orders
+      } else {
+        alert(data.message || "Gagal mengirim review");
+      }
+    } catch (err) {
+      console.error("Gagal submit review:", err);
+    }
+  }
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -79,7 +100,11 @@ export default function History() {
           Riwayat Pesanan
         </h1>
       </div>
-      <HistoryTable orders={orders} onUpdateStatus={handleUpdateStatus} />
+      <HistoryTable
+        orders={orders}
+        onUpdateStatus={handleUpdateStatus}
+        onSubmitReview={handleSubmitReview}
+      />
     </div>
   );
 }
