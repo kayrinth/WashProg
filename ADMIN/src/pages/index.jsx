@@ -4,6 +4,7 @@ import UserPage from "./UserPage";
 import LoginPage from "./LoginPage";
 import OrderAdminPage from "./OrderAdminPage";
 import OrderNewPage from "./OrderNewPage";
+import DashboardPage from "./DasboardPage";
 export {
   MapPage,
   OrderPage,
@@ -11,4 +12,5 @@ export {
   LoginPage,
   OrderAdminPage,
   OrderNewPage,
+  DashboardPage,
 };

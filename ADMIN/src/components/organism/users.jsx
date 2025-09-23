@@ -34,7 +34,7 @@ export default function Users() {
     <div className="p-6 mx-auto">
       <div className="flex flex-col items-start justify-start mt-14 md:mt-0">
         <h1 className="text-2xl font-semibold mb-1">Daftar Pelanggan</h1>
-        <div className=" w-44 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mb-8 "></div>
+        <div className=" w-48 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mb-8 "></div>
       </div>
       <UserTable users={users} />
     </div>

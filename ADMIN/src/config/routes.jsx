@@ -7,6 +7,7 @@ import {
   LoginPage,
   OrderAdminPage,
   OrderNewPage,
+  DashboardPage,
 } from "../pages";
 import AdminLayout from "../components/template/adminLayout";
 
@@ -14,6 +15,14 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <AdminLayout>
+        <DashboardPage />,
+      </AdminLayout>
+    ),
   },
   {
     path: "/maps",

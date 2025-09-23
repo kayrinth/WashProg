@@ -5,6 +5,7 @@ import OrderTableAdmin from "./orderTableAdmin.jsx";
 import SelectCategory from "./SelectCategory.jsx";
 import SelectService from "./SelectService.jsx";
 import FormInput from "./FormInput.jsx";
+import DashboardTemplate from "./dashboardTemplate.jsx";
 export {
   OrderTable,
   UserTable,
@@ -13,4 +14,5 @@ export {
   SelectCategory,
   SelectService,
   FormInput,
+  DashboardTemplate,
 };

@@ -1,6 +1,7 @@
 // src/components/OrderResponsive.jsx
 import React from "react";
 import { Pagination, Input } from "../atoms";
+import { useState } from "react";
 
 const OrderTableAdmin = ({
   orders = [],
@@ -10,15 +11,25 @@ const OrderTableAdmin = ({
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = React.useState(1);
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("semua");
 
-  const searchOrder = orders.filter(
-    (order) =>
+  const filteredOrders = orders.filter((order) => {
+    const matchStatus =
+      statusFilter === "semua" ? true : order.status === statusFilter;
+
+    const matchSearch =
       (order.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      (order.phoneNumber || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+    return matchStatus && matchSearch;
+  });
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = searchOrder.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleWhatsAppChat = (phoneNumber) => {
     const formattedNumber = phoneNumber.startsWith("0")
@@ -65,11 +76,44 @@ const OrderTableAdmin = ({
 
   return (
     <div className="w-full rounded-2xl">
-      <div className="mb-4 mt-0 md:mt-4 flex justify-end">
-        <div class="relative md:w-96 w-full">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+      <div className="mb-4 mt-0 md:mt-4 flex flex-col md:flex-row md:justify-between gap-3">
+        {/* Filter status */}
+        <div className="relative inline-block w-full md:w-48">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            onFocus={() => setIsOpen(true)}
+            onBlur={() => setIsOpen(false)}
+            className="appearance-none border border-gray-300 rounded-xl px-3 py-2 pr-8 w-full focus:outline-none focus:ring-2 focus:ring-black transition duration-200 bg-white text-gray-700"
+          >
+            <option value="semua">Semua</option>
+            <option value="menunggu">Menunggu</option>
+            <option value="proses">Proses</option>
+            <option value="selesai">Selesai</option>
+          </select>
+
+          <svg
+            className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 transition-transform duration-200 ${
+              isOpen ? "rotate-180" : "rotate-0"
+            }`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+
+        {/* Search */}
+        <div className="relative w-full md:w-96">
+          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg
-              class="w-4 h-4 text-gray-500 dark:text-gray-400"
+              className="w-4 h-4 text-gray-500"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -77,9 +121,9 @@ const OrderTableAdmin = ({
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
               />
             </svg>
@@ -87,7 +131,7 @@ const OrderTableAdmin = ({
           <Input
             type="search"
             id="default-search"
-            className="block w-full p-2.5 ps-10 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-black focus:border-red-ring-black outline-none transition-all duration-200 bg-white text-gray-700"
+            className="block w-full p-2.5 ps-10 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-black outline-none transition-all duration-200 bg-white text-gray-700"
             placeholder="Cari nama pelanggan atau nomor telepon....."
             value={searchTerm}
             onChange={(e) => {
@@ -325,7 +369,7 @@ const OrderTableAdmin = ({
         </div>
         <Pagination
           currentPage={currentPage}
-          totalItems={orders.length}
+          totalItems={filteredOrders.length}
           itemsPerPage={itemsPerPage}
           onPageChange={setCurrentPage}
         />
@@ -493,7 +537,7 @@ const OrderTableAdmin = ({
         )}
         <Pagination
           currentPage={currentPage}
-          totalItems={orders.length}
+          totalItems={filteredOrders.length}
           itemsPerPage={itemsPerPage}
           onPageChange={setCurrentPage}
         />

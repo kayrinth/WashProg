@@ -1,3 +1,4 @@
 import Input from "./dynamicInput";
 import Pagination from "./pagination";
-export { Input, Pagination };
+import Card from "./dynamicCards";
+export { Input, Pagination, Card };
