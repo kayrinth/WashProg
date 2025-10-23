@@ -5,5 +5,6 @@ import gambar2 from "./2.webp";
 import gambar1 from "./1.webp";
 import gambar3 from "./3.webp";
 import order from "./order.webp";
+import hero2 from "./hero2.jpg";
 
-export { hero1, logo, logo2, gambar1, gambar2, gambar3, order };
+export { hero1, logo, logo2, gambar1, gambar2, gambar3, order, hero2 };

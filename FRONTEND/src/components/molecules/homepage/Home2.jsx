@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { logo2, gambar2, gambar3, gambar1 } from "../../../assets";
+import { WashingMachine } from "lucide-react";
 
 export default function Home2() {
   const [visibleCards, setVisibleCards] = useState(new Set());
@@ -40,7 +41,6 @@ export default function Home2() {
             setVisibleCards(
               (prev) => new Set([...prev, entry.target.dataset.cardId])
             );
-            observer.unobserve(entry.target);
           }
         });
       },
@@ -52,17 +52,23 @@ export default function Home2() {
   }, []);
 
   return (
-    <div className="py-12 md:py-16 bg-gradient-to-b from-blue-50 to-white bg-opacity-50">
+    // <div className="py-12 md:py-16 bg-gradient-to-b from-blue-50 to-white bg-opacity-50">
+    <div className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col items-center justify-center ">
         <div className="w-full max-w-7xl text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-black mb-3">
-            Layanan Kami
-          </h1>
-          <p className="text-base text-gray-700 max-w-2xl mx-auto mb-10">
-            Kami memberikan berbagai macam layanan untuk merawat barang
-            kesayangan Anda, seperti sepatu, tas, dan topi, dengan kualitas
-            terbaik.
-          </p>
+          <div className="w-full max-w-4xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-pulse">
+              <WashingMachine className="w-4 h-4" />
+              <span>Layanan Kami</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-black mb-3">
+              Dari Kotor Jadi Kinclong, Lewat Layanan Kami
+            </h1>
+            <p className="text-base text-gray-700 max-w-2xl mx-auto mb-10">
+              Setiap layanan kami dirancang buat satu tujuan bikin kamu makin
+              percaya pakai sepatu, tas, dab topi kesayanganmu.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-8 mx-auto max-w-6xl">
             {serviceData.map((service, index) => (
@@ -77,7 +83,7 @@ export default function Home2() {
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                <div className="bg-white text-black border border-gray-200 w-full max-w-md mx-auto rounded-xl shadow-md overflow-hidden text-center p-5 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-[#068FFF] hover:bg-[#068FFF] hover:text-white">
+                <div className="bg-white text-black border border-gray-200 w-full max-w-md mx-auto rounded-xl shadow-sm overflow-hidden text-center p-5 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-[#068FFF] hover:bg-[#068FFF] hover:text-white">
                   <div className="relative">
                     <img
                       src={service.logo}
@@ -104,11 +110,7 @@ export default function Home2() {
 
         <a
           href="/menu"
-          className="mt-12 inline-block bg-[#068FFF] text-white px-6 py-2 rounded-lg text-lg md:text-xl xl:text-2xl 
-             transition-all duration-300 ease-in-out
-             hover:bg-gradient-to-r hover:from-[#068FFF] hover:to-blue-700
-             hover:shadow-lg hover:shadow-blue-900/40 
-             hover:scale-[1.02] active:scale-[0.98]"
+          className="inline-flex items-center gap-2 bg-transparent border-2 border-blue-600 text-blue-600 px-16 py-3 rounded-xl text-base font-semibold transition-all duration-300 hover:bg-blue-600 hover:text-white hover:-translate-y-0.5 active:translate-y-0 mt-4"
         >
           Selengkapnya...
         </a>

@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import { useState, useRef } from "react";
-import { logo } from "../../assets";
 import { toast } from "react-toastify";
+import { ShieldCheck } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export default function ConfirmOTPForm({ openRegister }) {
+export default function ConfirmOTPForm({ openRegister, goToNextStep }) {
   const [otpCode, setOtpCode] = useState("");
   const inputRefs = useRef([]);
 
@@ -49,6 +49,7 @@ export default function ConfirmOTPForm({ openRegister }) {
       toast.success("Verifikasi OTP berhasil!");
       setOtpCode("");
       openRegister();
+      goToNextStep();
     } catch (err) {
       console.error("Verifikasi OTP error:", err.message);
       toast.error(err.message || "Verifikasi OTP gagal!");
@@ -56,43 +57,37 @@ export default function ConfirmOTPForm({ openRegister }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-        <img
-          src={logo}
-          alt="WashProg Logo"
-          className="w-28 md:w-36 xl:w-48 mx-auto mb-4"
-        />
-        <h2 className="text-xl font-semibold mb-1">Verifikasi OTP</h2>
-        <p className="text-xs text-gray-500 mb-4">
-          Masukkan 4 digit kode OTP yang dikirim ke WhatsApp Anda
-        </p>
+    <div className="text-center w-full max-w-sm mx-auto">
+      <h2 className="text-xl font-semibold mb-1">Verifikasi OTP</h2>
+      <p className="text-xs text-gray-500 mb-4">
+        Masukkan 4 digit kode OTP yang dikirim ke WhatsApp Anda
+      </p>
 
-        <div className="flex justify-center gap-2 mb-4">
-          {Array(4)
-            .fill(0)
-            .map((_, i) => (
-              <input
-                key={i}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                className="w-10 h-12 text-center text-xl border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                value={otpCode[i] || ""}
-                onChange={(e) => handleOTPChange(e, i)}
-                onKeyDown={(e) => handleKeyDown(e, i)}
-                ref={(el) => (inputRefs.current[i] = el)}
-              />
-            ))}
-        </div>
-
-        <button
-          className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800 mb-2"
-          onClick={handleVerifyOTP}
-        >
-          Verifikasi
-        </button>
+      <div className="flex justify-center gap-2 mb-4">
+        {Array(4)
+          .fill(0)
+          .map((_, i) => (
+            <input
+              key={i}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              className="w-10 h-12 text-center text-xl border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              value={otpCode[i] || ""}
+              onChange={(e) => handleOTPChange(e, i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
+              ref={(el) => (inputRefs.current[i] = el)}
+            />
+          ))}
       </div>
+
+      <button
+        className="inline-flex items-center gap-2 bg-gray-900 text-white px-3 py-2 w-full rounded-md text-base font-semibold shadow-sm shadow-gray-900/20 transition-all duration-300 hover:bg-gray-800 hover:shadow-gray-900/30 hover:-translate-y-0.5 active:translate-y-0 justify-center "
+        onClick={handleVerifyOTP}
+      >
+        <ShieldCheck className="w-4 h-4" />
+        Verifikasi
+      </button>
     </div>
   );
 }
@@ -103,4 +98,5 @@ ConfirmOTPForm.propTypes = {
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   openRegister: PropTypes.func.isRequired,
+  goToNextStep: PropTypes.func.isRequired,
 };

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MessageCircleQuestion } from "lucide-react";
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -43,17 +44,19 @@ export default function FAQ() {
   return (
     <div className="md:py-16">
       <div className="p-10 md:p-12 w-full max-w-4xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-pulse">
+            <MessageCircleQuestion className="w-4 h-4" />
+            <span>Pertanyaan Sering Ditanyakan</span>
+          </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-black mb-4">
-            Frequently Asked Questions
+            Masih Ragu? Yuk, Temukan Jawabannya di Sini!
           </h1>
           <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
-            Temukan jawaban atas pertanyaan yang paling sering diajukan tentang
-            layanan kami
+            Percayakan sepatu, tas, dann topi pada ahlinya. Temukan jawaban atas
+            semua pertanyaanmu di sini.
           </p>
         </div>
-
         <div className="space-y-4">
           {faqData.map((faq, index) => (
             <div

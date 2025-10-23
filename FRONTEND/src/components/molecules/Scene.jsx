@@ -14,7 +14,6 @@ const MenuBoard = () => {
     }
   });
 
-  // Auto-scale berdasarkan ukuran layar
   const { viewport } = useThree();
   const scaleFactor = Math.min(viewport.width / 28, 1);
 

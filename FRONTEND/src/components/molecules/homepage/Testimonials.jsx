@@ -1,51 +1,8 @@
 import { useState, useEffect } from "react";
+import { Star } from "lucide-react";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Testimonial() {
-  // const testimonials = [
-  //   {
-  //     id: 1,
-  //     quote:
-  //       "Tools have transformed how we approach financial planning and budgeting. They help us make data-driven decisions that positively impact our.",
-  //     name: "Sarah Johnson",
-  //     avatar: "SJ",
-  //   },
-  //   {
-  //     id: 2,
-  //     quote:
-  //       "Switching to this platform was a game-changer for us. Their system streamlined our financial processes, saving us countless hours each month.",
-  //     name: "William Ashford",
-  //     avatar: "WA",
-  //   },
-  //   {
-  //     id: 3,
-  //     quote:
-  //       "The security features offered give us peace of mind knowing that our customer data is protected and compliance is maintained.",
-  //     name: "Scarlett Palmer",
-  //     avatar: "SP",
-  //   },
-  //   {
-  //     id: 4,
-  //     quote:
-  //       "The integration process was seamless and we were up and running within days. The support team was incredibly helpful throughout.",
-  //     name: "Ruby Hayes",
-  //     avatar: "RH",
-  //   },
-  //   {
-  //     id: 5,
-  //     quote:
-  //       "Our productivity increased by 40% after implementing their solution. The ROI was evident within the first quarter.",
-  //     name: "Michael Chen",
-  //     avatar: "MC",
-  //   },
-  //   {
-  //     id: 6,
-  //     quote:
-  //       "Customer satisfaction scores have improved dramatically. The platform handles our growing user base effortlessly.",
-  //     name: "Emily Rodriguez",
-  //     avatar: "ER",
-  //   },
-  // ];
   const [testimonials, setTestimonials] = useState([]);
   async function fetchTestimonials() {
     try {
@@ -94,15 +51,21 @@ export default function Testimonial() {
 
   console.log("testimonials", testimonials);
   return (
-    <div className="py-16 px-4 bg-gradient-to-b from-white to-blue-50 bg-opacity-50">
+    // <div className="py-16 px-4 bg-gradient-to-b from-white to-blue-50 bg-opacity-50">
+    <div className="py-16 px-4 bg-blue-50">
       <div className="p-10 md:p-12 w-full max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-pulse">
+            <Star className="w-4 h-4" />
+            <span>Testimoni</span>
+          </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-black mb-4">
-            Testimoni
+            Mereka Udah Buktiin Sendiri
           </h2>
           <p className="text-gray-600 text-base max-w-2xl mx-auto">
-            Berikut adalah beberapa testimoni dari pelanggan kami
+            Kualitas bukan cuma janji. Ini pengalaman nyata dari mereka yang
+            udah coba layanan kami.
           </p>
         </div>
 

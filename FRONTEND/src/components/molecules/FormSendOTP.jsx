@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Input } from "../atoms";
-import { logo } from "../../assets";
+import { MessageSquare } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -8,8 +8,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export default function SendOTPForm({
   registerData,
   handleInputChange,
-  onClose,
   openConfirmOTP,
+  goToNextStep,
 }) {
   const handleSendOTP = async () => {
     try {
@@ -20,18 +20,16 @@ export default function SendOTPForm({
       });
 
       const data = await res.json();
-      console.log("Full response data:", data);
-
-      if (!res.ok) throw new Error(data.message || "send OTP gagal");
+      if (!res.ok) throw new Error(data.message || "Send OTP gagal");
 
       const { phoneNumber } = data.data;
       localStorage.setItem("phoneNumber", phoneNumber);
       localStorage.setItem("otpSent", "true");
 
       toast.success("Send OTP berhasil!");
-
       handleInputChange({ target: { name: "phoneNumber", value: "" } });
       openConfirmOTP();
+      goToNextStep();
     } catch (err) {
       console.error("Send OTP error:", err.message);
       toast.error("Send OTP gagal!");
@@ -39,37 +37,26 @@ export default function SendOTPForm({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-        <img
-          src={logo}
-          alt="WashProg Logo"
-          className="w-28 md:w-36 xl:w-48 mx-auto mb-4"
-        />
-        <h2 className="text-xl font-semibold">Registrasi</h2>
-        <h5 className="text-xs font-normal mb-4">
-          Masukkan Nomor untuk kirim OTP
-        </h5>
+    <div className="text-center w-full max-w-sm mx-auto">
+      <h2 className="text-xl font-semibold mb-1">Registrasi</h2>
+      <p className="text-xs font-normal mb-4">Masukkan Nomor untuk kirim OTP</p>
 
-        <Input
-          type="number"
-          name="phoneNumber"
-          value={registerData.phoneNumber}
-          placeholder="0812XXXXXXXX"
-          onChange={handleInputChange}
-          className="w-full p-2 border rounded mb-2"
-        />
-        <button
-          className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800 mb-2"
-          onClick={handleSendOTP}
-        >
-          Kirim OTP
-        </button>
+      <Input
+        type="number"
+        name="phoneNumber"
+        value={registerData.phoneNumber}
+        placeholder="0812XXXXXXXX"
+        onChange={handleInputChange}
+        className="w-full p-2 border rounded mb-2"
+      />
 
-        <button className="text-gray-500 hover:text-gray-700" onClick={onClose}>
-          Batal
-        </button>
-      </div>
+      <button
+        className="inline-flex items-center gap-2 bg-gray-900 text-white px-3 py-2 w-full rounded-md text-base font-semibold shadow-sm shadow-gray-900/20 transition-all duration-300 hover:bg-gray-800 hover:shadow-gray-900/30 hover:-translate-y-0.5 active:translate-y-0 justify-center "
+        onClick={handleSendOTP}
+      >
+        <MessageSquare className="w-4 h-4" />
+        Kirim OTP
+      </button>
     </div>
   );
 }
@@ -81,4 +68,5 @@ SendOTPForm.propTypes = {
   handleInputChange: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   openConfirmOTP: PropTypes.func.isRequired,
+  goToNextStep: PropTypes.func.isRequired,
 };

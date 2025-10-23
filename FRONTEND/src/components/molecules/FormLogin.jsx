@@ -4,6 +4,8 @@ import { Input } from "../atoms";
 import { logo } from "../../assets";
 import useAuthStore from "../../stores/useAuthStore";
 import { toast } from "react-toastify";
+import { LogIn, UserPlus } from "lucide-react";
+import { AnimatedContent } from "../reactBits";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -95,85 +97,83 @@ export default function LoginForm({
   // };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-        <img
-          src={logo}
-          alt="WashProg Logo"
-          className="w-28 mx-auto mb-4"
-          loading="lazy"
-        />
-        <h2 className="text-xl font-semibold mb-4">Login</h2>
+    <>
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <AnimatedContent className="fixed inset-0 flex justify-center items-center z-999">
+          <div className="bg-white p-6 rounded-[2rem] shadow-lg w-80 text-center border border-gray-800">
+            <img
+              src={logo}
+              alt="WashProg Logo"
+              className="w-44 md:w-48 mx-auto mb-4"
+              loading="lazy"
+            />
+            <h2 className="text-xl font-semibold mb-4">Masuk</h2>
 
-        <div className="mb-2 text-left">
-          <Input
-            type="tel"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            maxLength={15}
-            name="phoneNumber"
-            value={loginData.phoneNumber}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, "");
-              handleInputChange({ target: { name: "phoneNumber", value } });
-              if (value) setErrors((prev) => ({ ...prev, phoneNumber: "" }));
-            }}
-            placeholder="Nomor Telepon"
-            className={`w-full p-2 border rounded ${
-              errors.phoneNumber ? "border-red-500" : ""
-            }`}
-          />
-          {errors.phoneNumber && (
-            <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>
-          )}
-        </div>
+            <div className="mb-2 text-left">
+              <Input
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={15}
+                name="phoneNumber"
+                value={loginData.phoneNumber}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  handleInputChange({ target: { name: "phoneNumber", value } });
+                  if (value)
+                    setErrors((prev) => ({ ...prev, phoneNumber: "" }));
+                }}
+                placeholder="Nomor Telepon"
+                className={`w-full p-2 border rounded ${
+                  errors.phoneNumber ? "border-red-500" : ""
+                }`}
+              />
+              {errors.phoneNumber && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.phoneNumber}
+                </p>
+              )}
+            </div>
 
-        <div className="mb-2 text-left">
-          <Input
-            type="password"
-            name="password"
-            value={loginData.password}
-            placeholder="Password"
-            onChange={(e) => {
-              handleInputChange(e);
-              if (e.target.value)
-                setErrors((prev) => ({ ...prev, password: "" }));
-            }}
-            className={`w-full p-2 border rounded ${
-              errors.password ? "border-red-500" : ""
-            }`}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-          )}
-        </div>
+            <div className="mb-2 text-left">
+              <Input
+                type="password"
+                name="password"
+                value={loginData.password}
+                placeholder="Password"
+                onChange={(e) => {
+                  handleInputChange(e);
+                  if (e.target.value)
+                    setErrors((prev) => ({ ...prev, password: "" }));
+                }}
+                className={`w-full p-2 border rounded ${
+                  errors.password ? "border-red-500" : ""
+                }`}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              )}
+            </div>
 
-        <button
-          className="relative bg-black text-white px-4 py-2 w-full rounded-md 
-             transition-all duration-300 ease-in-out
-             hover:bg-gradient-to-r hover:from-black hover:to-gray-800
-             hover:shadow-lg hover:shadow-gray-700/50 
-             hover:scale-[1.02] active:scale-[0.98] mb-3"
-          onClick={handleLogin}
-        >
-          Masuk
-        </button>
+            <button
+              className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 w-full rounded-md text-base font-semibold shadow-md shadow-blue-600/20 transition-all duration-300 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 hover:-translate-y-0.5 active:translate-y-0 justify-center mb-2"
+              onClick={handleLogin}
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Masuk</span>
+            </button>
 
-        <button
-          // className="bg-black text-white px-4 py-2 w-full rounded-md hover:bg-gradient-to-r from-black to-gray-800"
-          className="relative bg-black text-white px-4 py-2 w-full rounded-md 
-             transition-all duration-300 ease-in-out
-             hover:bg-gradient-to-r hover:from-black hover:to-gray-800
-             hover:shadow-lg hover:shadow-gray-700/50 
-             hover:scale-[1.02] active:scale-[0.98]"
-          onClick={openSendOTP}
-        >
-          Registrasi
-        </button>
+            <button
+              className="inline-flex items-center gap-2 bg-gray-900 text-white px-4 py-2 w-full rounded-md text-base font-semibold shadow-md shadow-gray-900/20 transition-all duration-300 hover:bg-gray-800 hover:shadow-lg hover:shadow-gray-900/30 hover:-translate-y-0.5 active:translate-y-0 justify-center "
+              onClick={openSendOTP}
+            >
+              <UserPlus className="w-4 h-4" />
+              <span>Daftar</span>
+            </button>
 
-        {/* <div className="my-4 text-gray-500">Atau</div> */}
+            {/* <div className="my-4 text-gray-500">Atau</div> */}
 
-        {/* 
+            {/* 
         <button
           className="flex items-center justify-center w-full border rounded-md py-2 hover:bg-gray-100"
           onClick={handleLoginGoogle}
@@ -183,14 +183,16 @@ export default function LoginForm({
         </button> 
         */}
 
-        <button
-          className="text-gray-500 hover:text-gray-700 mt-4"
-          onClick={onClose}
-        >
-          Batal
-        </button>
+            <button
+              className="text-gray-500 hover:text-gray-700 mt-4"
+              onClick={onClose}
+            >
+              Batal
+            </button>
+          </div>
+        </AnimatedContent>
       </div>
-    </div>
+    </>
   );
 }
 

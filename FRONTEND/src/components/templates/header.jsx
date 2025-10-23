@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu } from "lucide-react";
+// import { Menu } from "lucide-react";
 import { logo } from "../../assets";
 import {
   LoginForm,
@@ -9,13 +9,17 @@ import {
 } from "../molecules";
 import useAuthStore from "../../stores/useAuthStore";
 import { useLoginModal } from "../../stores/loginLogoutModal";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import { Squash as Hamburger } from "hamburger-react";
+import Stepper, { Step } from "../reactBits/Stepper/Stepper";
+import { LogIn } from "lucide-react";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
+  const location = useLocation();
 
   const {
     isLoginOpen,
@@ -44,6 +48,28 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (
+      isLoginOpen ||
+      isSendOTPOpen ||
+      isConfirmOTPOpen ||
+      isRegisterOpen ||
+      isDropdownOpen
+    ) {
+      setIsOpen(false);
+    }
+  }, [
+    isLoginOpen,
+    isSendOTPOpen,
+    isConfirmOTPOpen,
+    isRegisterOpen,
+    isDropdownOpen,
+  ]);
+
+  const isPesanActive = (path) => {
+    return location.pathname === path || location.pathname === "/receipt";
+  };
 
   return (
     <>
@@ -83,8 +109,8 @@ export default function Header() {
             <NavLink
               to="/pesan"
               onClick={handlePesanClick}
-              className={({ isActive }) =>
-                isActive
+              className={() =>
+                isPesanActive("/pesan")
                   ? "text-blue-600 font-bold border-b-2 border-blue-600"
                   : "text-gray-700 hover:text-blue-600"
               }
@@ -132,14 +158,11 @@ export default function Header() {
             </div>
           ) : (
             <button
-              className=" bg-[#068FFF] text-white px-4 py-2 rounded-md 
-             transition-all duration-300 ease-in-out
-             hover:bg-gradient-to-r hover:from-[#068FFF] hover:to-blue-600
-             hover:shadow-lg hover:shadow-blue-900/50 
-             hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg text-base font-semibold shadow-md shadow-blue-600/20 transition-all duration-300 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 hover:-translate-y-0.5 active:translate-y-0"
               onClick={openLogin}
             >
-              Masuk
+              <LogIn className="w-4 h-4" />
+              <span>Masuk</span>
             </button>
           )}
         </div>
@@ -151,29 +174,34 @@ export default function Header() {
           {user && (
             <span
               className="text-sm font-medium text-gray-800 cursor-pointer"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              onClick={() => {
+                setIsDropdownOpen(!isDropdownOpen);
+                setIsOpen(false);
+              }}
             >
               {user.name}
               {isDropdownOpen && (
-                <div className="absolute top-16 left-0 w-full bg-white shadow-md p-4 flex flex-col space-y-2 text-center md:hidden">
-                  <NavLink
-                    to="/history"
-                    className="block px-4 py-1 text-gray-800 hover:bg-gray-100"
-                  >
-                    Riwayat Pesanan
-                  </NavLink>
-                  <NavLink
-                    to="/profile"
-                    className="block px-4 py-1 text-gray-800 hover:bg-gray-100"
-                  >
-                    Profil
-                  </NavLink>
-                  <button
-                    onClick={logout}
-                    className="block px-4 py-1  hover:bg-gray-100 bg-red-500 text-white rounded-md"
-                  >
-                    Keluar
-                  </button>
+                <div>
+                  <div className="absolute top-20 left-0 right-0 mx-auto w-3/4 bg-white shadow-md p-4 flex flex-col space-y-2 text-center md:hidden mt-1 rounded-xl">
+                    <NavLink
+                      to="/history"
+                      className="block px-4 py-1 text-gray-800 hover:bg-gray-100"
+                    >
+                      Riwayat Pesanan
+                    </NavLink>
+                    <NavLink
+                      to="/profile"
+                      className="block px-4 py-1 text-gray-800 hover:bg-gray-100"
+                    >
+                      Profil
+                    </NavLink>
+                    <button
+                      onClick={logout}
+                      className="block px-4 py-1  hover:bg-gray-100 bg-red-500 text-white rounded-md"
+                    >
+                      Keluar
+                    </button>
+                  </div>
                 </div>
               )}
             </span>
@@ -182,8 +210,14 @@ export default function Header() {
           <div className="flex justify-center flex-1">
             <img src={logo} alt="WashProg" className="h-10" />
           </div>
-          <button onClick={() => setIsOpen(!isOpen)}>
-            <Menu size={28} />
+          <button
+            onClick={() => {
+              setIsOpen(!isOpen);
+              setIsDropdownOpen(false);
+            }}
+          >
+            {/* <Menu size={28} /> */}
+            <Hamburger toggled={isOpen} toggle={setIsOpen} size={28} />
           </button>
         </div>
 
@@ -222,10 +256,11 @@ export default function Header() {
             </NavLink>
             {user ? null : (
               <button
-                className="bg-[#068FFF] text-white font-semibold px-4 py-2 rounded-md hover:bg-opacity-50"
+                className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-base font-semibold shadow-md shadow-blue-600/20 transition-all duration-300 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 hover:-translate-y-0.5 active:translate-y-0 justify-center"
                 onClick={openLogin}
               >
-                Masuk
+                <LogIn className="w-4 h-4" />
+                <span>Masuk</span>
               </button>
             )}
           </div>
@@ -240,7 +275,7 @@ export default function Header() {
           openSendOTP={openSendOTP}
         />
       )}
-
+      {/* 
       {isSendOTPOpen && (
         <SendOTPForm
           registerData={registerData}
@@ -266,6 +301,71 @@ export default function Header() {
           goToLogin={goToLogin}
           onClose={closeAllModals}
         />
+      )} */}
+
+      {(isSendOTPOpen || isConfirmOTPOpen || isRegisterOpen) && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className=" p-0 md:p-6 w-full max-w-md relative m-6">
+            <button
+              onClick={closeAllModals}
+              className="absolute -top-3 -right-3 bg-white/90 hover:bg-white text-gray-500 hover:text-gray-700 rounded-full shadow-md p-1 transition-all z-10"
+              aria-label="Close"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <Stepper
+              initialStep={1}
+              onStepChange={(step) => {
+                console.log("Stepper step:", step);
+              }}
+              onFinalStepCompleted={() => {
+                console.log("Registration flow completed!");
+                closeAllModals();
+              }}
+            >
+              <Step>
+                <SendOTPForm
+                  registerData={registerData}
+                  handleInputChange={handleRegisterInputChange}
+                  onClose={closeAllModals}
+                  openConfirmOTP={openConfirmOTP}
+                />
+              </Step>
+
+              <Step>
+                <ConfirmOTPForm
+                  registerData={registerData}
+                  handleInputChange={handleRegisterInputChange}
+                  onClose={closeAllModals}
+                  openRegister={openRegister}
+                />
+              </Step>
+
+              <Step>
+                <RegisterForm
+                  registerData={registerData}
+                  handleInputChange={handleRegisterInputChange}
+                  goToLogin={goToLogin}
+                  onClose={closeAllModals}
+                />
+              </Step>
+            </Stepper>
+          </div>
+        </div>
       )}
     </>
   );

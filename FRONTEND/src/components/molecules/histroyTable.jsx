@@ -245,7 +245,7 @@ const HistoryTable = ({ orders = [], onUpdateStatus, onSubmitReview }) => {
                                     className="w-[210px] border rounded-lg p-2 text-sm"
                                   />
                                   <button
-                                    className="w-full bg-green-500 text-white rounded-md text-sm md:text-base transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-green-800 hover:to-blue-600hover:shadow-lg hover:shadow-green-900/50 hover:scale-[1.02] active:scale-[0.98]"
+                                    className="w-full inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 bg-green-100 text-green-800 hover:bg-green-200 border border-green-200"
                                     onClick={() => handleSubmit(order._id)}
                                   >
                                     Kirim Review
@@ -379,7 +379,7 @@ const HistoryTable = ({ orders = [], onUpdateStatus, onSubmitReview }) => {
 
               {/* Actions */}
               <div className="p-4 bg-gray-50 border-t border-gray-100">
-                <div>
+                {order.status !== "selesai" && (
                   <button
                     disabled={order.status !== "menunggu"}
                     className={`w-full inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
@@ -391,7 +391,32 @@ const HistoryTable = ({ orders = [], onUpdateStatus, onSubmitReview }) => {
                   >
                     Batalkan Pesanan
                   </button>
-                </div>
+                )}
+                {order.status === "selesai" && (
+                  <div className="">
+                    {order.review ? (
+                      <p className="text-sm text-gray-700 italic">{`"${order.review}"`}</p>
+                    ) : (
+                      <div className="flex flex-col space-y-2">
+                        <textarea
+                          rows="3"
+                          value={reviewInputs[order._id] || ""}
+                          onChange={(e) =>
+                            handleInputChange(order._id, e.target.value)
+                          }
+                          placeholder="Tulis review..."
+                          className="w-full border rounded-lg p-2 text-sm"
+                        />
+                        <button
+                          className="`w-full inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 bg-green-100 text-green-800 hover:bg-green-200 border border-green-200"
+                          onClick={() => handleSubmit(order._id)}
+                        >
+                          Kirim Review
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           ))

@@ -5,7 +5,6 @@ import { MdDelete } from "react-icons/md";
 import LoadingOverlay from "../templates/loading";
 import SuccessModal from "../templates/success";
 import ErrorModal from "../templates/error";
-import { Input } from "../atoms";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -16,6 +15,8 @@ export default function Receipt() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedLatLng, setSelectedLatLng] = useState(null);
   const [orderStatus, setOrderStatus] = useState(null);
+  const [value, setValue] = useState("");
+  const maxLength = 100;
   // const navigate = useNavigate();
 
   useEffect(() => {
@@ -132,6 +133,11 @@ export default function Receipt() {
     0
   );
 
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    setAddress(e.target.value);
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h3 className="text-2xl font-bold mb-4 text-center">Nota Pesanan</h3>
@@ -176,13 +182,24 @@ export default function Receipt() {
 
       <div className="mt-6 z-50">
         <MapComponent onLocationSelect={handleLocationSelect} />
-        <Input
-          type="text"
-          placeholder="Masukkan Detail Alamat"
-          className="w-full p-2 border rounded mt-4"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <textarea
+            className="w-full p-2 border rounded mt-4"
+            value={address}
+            onChange={handleChange}
+            maxLength={maxLength}
+            rows={4}
+            placeholder="Masukkan Detail Alamat..."
+          />
+          <small
+            style={{
+              alignSelf: "flex-end",
+              color: value.length === maxLength ? "red" : "black",
+            }}
+          >
+            {value.length}/{maxLength}
+          </small>
+        </div>
       </div>
 
       <div className="flex justify-between mt-6">

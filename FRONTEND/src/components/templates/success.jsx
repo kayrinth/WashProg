@@ -30,9 +30,9 @@ const SuccessModal = ({
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center "
       style={{ zIndex: 10000 }}
     >
-      <div className="bg-white rounded-lg p-6 max-w-md w-full text-center shadow-lg">
+      <div className="bg-white rounded-lg p-4 md:p-6 max-w-md w-full text-center shadow-lg mx-6">
         {/* Success Icon */}
-        <div className="w-16 h-16 mx-auto mb-4">
+        <div className="w-16 h-16 mx-auto mb-2">
           <svg
             className="w-full h-full text-green-500"
             fill="none"
@@ -48,18 +48,19 @@ const SuccessModal = ({
           </svg>
         </div>
 
-        {/* Title */}
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">{title}</h2>
-
-        {/* Message */}
-        <p className="text-gray-600">{message}</p>
+        <h2 className="text-base font-semibold text-gray-800">{title}</h2>
+        <p className="text-gray-600 text-sm">{message}</p>
 
         {/* OK Button */}
         <button
           onClick={btnclose}
-          className="mt-4 px-4 py-2 bg-[#068FFF] text-white rounded hover:bg-orange-600"
+          className="mt-4 bg-[#068FFF] text-white px-4 py-2 rounded-md 
+             transition-all duration-300 ease-in-out
+             hover:bg-gradient-to-r hover:from-[#068FFF] hover:to-blue-600
+             hover:shadow-lg hover:shadow-blue-900/50 
+             hover:scale-[1.02] active:scale-[0.98]"
         >
-          OK
+          Kembali
         </button>
       </div>
     </div>

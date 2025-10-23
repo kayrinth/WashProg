@@ -162,12 +162,11 @@ export default function Order() {
             <div className="pt-4">
               <button
                 onClick={handleAddToCart}
-                // className="w-full bg-[#068FFF] text-white text-lg py-2 rounded-lg shadow-md hover:bg-opacity-50 transition-all"
                 className="w-full bg-[#068FFF] text-white py-2 rounded-md text-sm md:text-lg 
              transition-all duration-300 ease-in-out
              hover:bg-gradient-to-r hover:from-[#068FFF] hover:to-blue-600
              hover:shadow-lg hover:shadow-blue-900/50 
-             hover:scale-[1.02] active:scale-[0.98]"
+             hover:scale-[1] active:scale-[0.98]"
               >
                 Pesan
               </button>
