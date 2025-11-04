@@ -11,6 +11,7 @@ userRoutes.get("/user/dashboard", verifyToken, userController.dashboard);
 userRoutes.get("/user/google/login", userController.loginWithGoogle);
 userRoutes.get("/user/google/callback", userController.googleCallback);
 userRoutes.get("/users", userController.getAll);
+userRoutes.delete("/user/delete/:id", verifyToken, userController.deleteUser);
 userRoutes.get("/user/profile/:id", verifyToken, userController.getProfile);
 userRoutes.put("/user/profile/:id", verifyToken, userController.updateProfile);
 

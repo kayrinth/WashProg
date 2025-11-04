@@ -41,7 +41,26 @@ app.use("/api/v1", route);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  const statusCode = err.status || 500;
+  let statusCode;
+
+  switch (err.name) {
+    case "BAD_REQUEST":
+      statusCode = 400;
+      break;
+    case "UNAUTHORIZED":
+      statusCode = 401;
+      break;
+    case "FORBIDDEN":
+      statusCode = 403;
+      break;
+    case "NOT_FOUND":
+      statusCode = 404;
+      break;
+    default:
+      statusCode = err.status || 500;
+      break;
+  }
+
   const message = err.message || "Internal Server Error";
 
   res.status(statusCode).json({

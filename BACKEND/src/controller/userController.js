@@ -29,8 +29,6 @@ const userController = {
           message: errorMsg.USER_ALREADY_EXISTS,
         });
       }
-
-      // Verify OTP before registration
       const otpRecord = await OTP.findOne({
         phoneNumber: formattedPhone,
         verified: true,
@@ -44,15 +42,7 @@ const userController = {
             "OTP belum diverifikasi atau sudah kadaluarsa. Silakan verifikasi OTP terlebih dahulu.",
         });
       }
-
-      console.log("Password untuk hashing:", password);
-
-      // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
-
-      console.log("Password berhasil di-hash:", hashedPassword);
-
-      // Create new user
       const newUser = await User.create({
         name,
         password: hashedPassword,
@@ -60,10 +50,7 @@ const userController = {
         joinAt: new Date(),
         isVerified: true,
       });
-
-      // Delete OTP record after successful registration
       await OTP.deleteOne({ phoneNumber: formattedPhone });
-
       ResponseAPI.success(res, {
         message: "Registrasi berhasil!",
         user: {
@@ -84,7 +71,6 @@ const userController = {
     try {
       const { phoneNumber, password } = req.body;
 
-      // Validasi input
       if (!phoneNumber || !password) {
         return next({
           name: errorName.BAD_REQUEST,
@@ -95,6 +81,7 @@ const userController = {
       const user = await User.findOne({ phoneNumber });
       if (!user) {
         return next({
+          status: 404,
           name: errorName.NOT_FOUND,
           message: errorMsg.USER_NOT_FOUND,
         });
@@ -103,6 +90,7 @@ const userController = {
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         return next({
+          status: 401,
           name: errorName.UNAUTHORIZED,
           message: errorMsg.INVALID_CREDENTIALS,
         });
@@ -113,16 +101,12 @@ const userController = {
         env.jwtSecret,
         { expiresIn: env.jwtExpiresIn }
       );
-      console.log(env.jwtExpiresIn);
-
       if (user.role !== "user") {
         return next({
           name: errorName.FORBIDDEN,
           message: "Access denied. user privileges required.",
         });
       }
-
-      // Kirim response dengan token dan data user
       return ResponseAPI.success(res, {
         token,
         userId: user._id,
@@ -320,6 +304,16 @@ const userController = {
       await findUser.save();
 
       ResponseAPI.success(res, findUser);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async deleteUser(req, res, next) {
+    try {
+      const { id } = req.params;
+      const user = await User.findByIdAndDelete(id);
+      ResponseAPI.success(res, user);
     } catch (error) {
       next(error);
     }

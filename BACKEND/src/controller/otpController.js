@@ -3,6 +3,7 @@ const OTPGenerator = require("../utils/otpGenerator");
 const WablastService = require("../config/wablast");
 const ResponseAPI = require("../utils/response");
 const { errorMsg, errorName } = require("../utils/errorMiddlewareMsg");
+const { User } = require("../models");
 
 const otpController = {
   // Send OTP for registration
@@ -16,14 +17,22 @@ const otpController = {
           message: "Nomor WhatsApp harus diisi",
         });
       }
-
       const formattedPhone = phoneNumber.startsWith("+62")
         ? phoneNumber
         : phoneNumber.startsWith("0")
         ? "+62" + phoneNumber.slice(1)
         : "+62" + phoneNumber;
 
-      // Check if OTP already exists and not expired
+      const existingUser = await User.findOne({
+        phoneNumber: formattedPhone,
+      });
+      if (existingUser) {
+        return next({
+          status: 409,
+          name: errorName.CONFLICT,
+          message: "Nomor WhatsApp sudah terdaftar",
+        });
+      }
       const existingOTP = await OTPModel.findOne({
         phoneNumber: formattedPhone,
         expiresAt: { $gt: new Date() },
@@ -31,26 +40,22 @@ const otpController = {
 
       if (existingOTP) {
         return next({
+          status: 429,
           name: errorName.TOO_MANY_REQUESTS,
           message:
             "OTP sudah dikirim. Silakan tunggu 5 menit untuk mengirim ulang.",
         });
       }
-
-      // Generate new OTP
       const { otp, expiresAt } = OTPGenerator.generateOTPWithExpiry();
 
-      // Delete existing OTP for this phone number
       await OTPModel.deleteOne({ phoneNumber: formattedPhone });
 
-      // Save new OTP
       await OTPModel.create({
         phoneNumber: formattedPhone,
         otp,
         expiresAt,
       });
 
-      // Send OTP via Wablast
       await WablastService.sendOTP(formattedPhone, otp);
 
       ResponseAPI.success(res, {

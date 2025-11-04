@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       default: "",
+      unique: true,
     },
     // phoneNumber: {
     //   type: mongoose.Types.ObjectId,

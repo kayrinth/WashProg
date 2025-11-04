@@ -270,7 +270,6 @@ const orderController = {
         { $sort: { _id: 1 } },
       ]);
 
-      // ubah ke bentuk array harian (jaga urutan 7 hari)
       const days = Array.from({ length: 7 }).map((_, i) => {
         const d = new Date(sevenDaysAgo);
         d.setDate(sevenDaysAgo.getDate() + i);
@@ -290,6 +289,7 @@ const orderController = {
           path: "itemsId",
           populate: { path: "services", select: "title" },
         })
+        .limit(3)
         .lean();
 
       ResponseAPI.success(res, {
