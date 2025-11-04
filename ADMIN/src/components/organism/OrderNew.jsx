@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SelectCategory, SelectService, FormInput } from "../moleculs";
 import LoadingOverlay from "../template/loading";
-import SuccessModal from "../templa te/success";
+import SuccessModal from "../template/success";
 import ErrorModal from "../template/error";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
