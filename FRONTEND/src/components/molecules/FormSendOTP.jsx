@@ -20,8 +20,16 @@ export default function SendOTPForm({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Send OTP gagal");
-
+      if (!res.ok) {
+        if (res.status === 409) {
+          toast.error("User Sudah Terdaftar!");
+        } else if (res.status === 429) {
+          toast.error("Terlalu banyak permintaan, tunggu 5 menit!");
+        } else {
+          toast.error(data.message || "Login gagal!");
+        }
+        return;
+      }
       const { phoneNumber } = data.data;
       localStorage.setItem("phoneNumber", phoneNumber);
       localStorage.setItem("otpSent", "true");

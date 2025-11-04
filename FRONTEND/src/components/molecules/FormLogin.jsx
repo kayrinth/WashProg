@@ -60,7 +60,19 @@ export default function LoginForm({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Login gagal");
+      if (!res.ok) {
+        if (
+          res.status === 404 ||
+          data.message?.toLowerCase().includes("tidak ditemukan")
+        ) {
+          toast.error("User tidak ditemukan!");
+        } else if (res.status === 401) {
+          toast.error("Nomor telepon atau Password salah!");
+        } else {
+          toast.error(data.message || "Login gagal!");
+        }
+        return;
+      }
 
       const { token, user, userId } = data.data;
 

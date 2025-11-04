@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import MapComponent from "../molecules/leaflet/MapComponent";
-// import { useNavigate } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import LoadingOverlay from "../templates/loading";
 import SuccessModal from "../templates/success";
