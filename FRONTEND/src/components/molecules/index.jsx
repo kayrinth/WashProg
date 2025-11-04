@@ -8,7 +8,7 @@ import SelectService from "./SelectService.jsx";
 import InputNameItems from "./InputNameItems.jsx";
 import LoginForm from "./FormLogin";
 import RegisterForm from "./FormRegist.jsx";
-import HistoryTable from "./HistroyTable.jsx";
+import HistoryTable from "./HistoryTable.jsx";
 import SendOTPForm from "./FormSendOTP.jsx";
 import ConfirmOTPForm from "./FormConfirmOTP.jsx";
 import FAQ from "./homepage/FAQ.jsx";
