@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom"; // import useNavigate
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Home,
   Users,
@@ -9,9 +9,11 @@ import {
   LogOut,
   ShoppingCart,
   Store,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { logo } from "../../assets";
-import useAuthStore from "../../stores/useAuthStore"; // import useAuthStore
+import useAuthStore from "../../stores/useAuthStore";
 
 const menuItems = [
   { name: "Beranda", path: "/dashboard", icon: <Home size={20} /> },
@@ -32,12 +34,13 @@ const menuItems = [
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
 
   const handleLogout = () => {
     logout();
-    navigate("/"); // redirect ke halaman login
+    navigate("/");
   };
 
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -56,12 +59,31 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-56 bg-black text-white flex flex-col z-[9999] transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-screen bg-black text-white flex flex-col z-[9999] transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:static md:block md:h-screen`}
+        } ${isCollapsed ? "w-20" : "w-56"}
+         md:translate-x-0 md:static md:block md:h-screen`}
       >
-        <div className="p-6 text-2xl font-bold border-b border-gray-700 flex-shrink-0">
-          <img src={logo} alt="logo washprog" />
+        <div className="p-4 flex items-center justify-between border-b border-gray-700">
+          {!isCollapsed && (
+            <img
+              src={logo}
+              alt="logo washprog"
+              className={`transition-all duration-300 ${
+                isCollapsed ? "w-0" : "w-32"
+              }`}
+            />
+          )}
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="text-gray-400 hover:text-white"
+          >
+            {isCollapsed ? (
+              <ChevronRight size={20} />
+            ) : (
+              <ChevronLeft size={20} />
+            )}
+          </button>
         </div>
 
         <nav className="flex-1 p-4 space-y-2 bg-black overflow-y-auto">
@@ -78,18 +100,15 @@ export default function Sidebar() {
               onClick={() => setIsOpen(false)}
             >
               <span className="mr-3">{item.icon}</span>
-              {item.name}
+              {!isCollapsed && <span>{item.name}</span>}
             </NavLink>
           ))}
-
           <button
             onClick={handleLogout}
-            className="flex items-center px-4 py-2 rounded-lg w-full text-left hover:bg-gray-800"
+            className="flex items-center px-3 py-2 rounded-lg w-full text-left hover:bg-gray-800"
           >
-            <span className="mr-3">
-              <LogOut size={20} />
-            </span>
-            Logout
+            <LogOut size={20} />
+            {!isCollapsed && <span>Logout</span>}
           </button>
         </nav>
       </aside>

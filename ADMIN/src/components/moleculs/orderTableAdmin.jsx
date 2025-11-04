@@ -150,6 +150,7 @@ const OrderTableAdmin = ({
               <thead className="bg-black text-white">
                 <tr>
                   <th className="py-4 px-6 text-left font-semibold">No</th>
+                  <th className="py-4 px-6 text-center font-semibold">Aksi</th>
                   <th className="py-4 px-6 text-left font-semibold">
                     Pelanggan
                   </th>
@@ -168,7 +169,6 @@ const OrderTableAdmin = ({
                     Pembayaran
                   </th>
                   <th className="py-4 px-6 text-left font-semibold">Status</th>
-                  <th className="py-4 px-6 text-center font-semibold">Aksi</th>
                 </tr>
               </thead>
 
@@ -195,6 +195,70 @@ const OrderTableAdmin = ({
                       <td className="py-4 px-6">
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 font-semibold text-sm">
                           {index + 1 + indexOfFirstItem}
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex flex-col space-y-2">
+                          <button
+                            className={`inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+                              order.status === "menunggu"
+                                ? "bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-200"
+                                : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                            }`}
+                            disabled={order.status !== "menunggu"}
+                            onClick={() =>
+                              onUpdateStatus(order._id, "diproses")
+                            }
+                          >
+                            Proses
+                          </button>
+
+                          <button
+                            className={`inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+                              ["diproses", "diantar"].includes(order.status)
+                                ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border border-emerald-200"
+                                : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                            }`}
+                            disabled={
+                              !["diproses", "diantar"].includes(order.status)
+                            }
+                            onClick={() => onUpdateStatus(order._id, "selesai")}
+                          >
+                            Selesai
+                          </button>
+                          <div className="border-t pt-2">
+                            <p className="text-xs text-gray-500 mb-1">
+                              konfirmasi
+                            </p>
+
+                            <button
+                              className={`inline-flex items-center justify-center w-full px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
+                                isBelumLunas(order.paymentStatus)
+                                  ? "bg-green-100 text-green-800 hover:bg-green-200 border border-green-200"
+                                  : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                              }`}
+                              onClick={() =>
+                                onUpdatePaymentStatus(order._id, "lunas")
+                              }
+                              disabled={!isBelumLunas(order.paymentStatus)}
+                            >
+                              Pembayaran
+                            </button>
+                          </div>
+                          <div className="border-t pt-2">
+                            <p className="text-xs text-gray-500 mb-1">
+                              WhatsApp
+                            </p>
+
+                            <button
+                              className={`inline-flex items-center justify-center w-full px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 bg-green-100 text-green-800 hover:bg-green-200 border border-green-200 `}
+                              onClick={() =>
+                                handleWhatsAppChat(order.phoneNumber)
+                              }
+                            >
+                              Kirim Pesan
+                            </button>
+                          </div>
                         </div>
                       </td>
                       <td className="py-4 px-6">
@@ -295,70 +359,6 @@ const OrderTableAdmin = ({
                           </span>
                           {order.status}
                         </span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="flex flex-col space-y-2">
-                          <button
-                            className={`inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
-                              order.status === "menunggu"
-                                ? "bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-200"
-                                : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
-                            }`}
-                            disabled={order.status !== "menunggu"}
-                            onClick={() =>
-                              onUpdateStatus(order._id, "diproses")
-                            }
-                          >
-                            Proses
-                          </button>
-
-                          <button
-                            className={`inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
-                              ["diproses", "diantar"].includes(order.status)
-                                ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border border-emerald-200"
-                                : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
-                            }`}
-                            disabled={
-                              !["diproses", "diantar"].includes(order.status)
-                            }
-                            onClick={() => onUpdateStatus(order._id, "selesai")}
-                          >
-                            Selesai
-                          </button>
-                          <div className="border-t pt-2">
-                            <p className="text-xs text-gray-500 mb-1">
-                              konfirmasi
-                            </p>
-
-                            <button
-                              className={`inline-flex items-center justify-center w-full px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
-                                isBelumLunas(order.paymentStatus)
-                                  ? "bg-green-100 text-green-800 hover:bg-green-200 border border-green-200"
-                                  : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
-                              }`}
-                              onClick={() =>
-                                onUpdatePaymentStatus(order._id, "lunas")
-                              }
-                              disabled={!isBelumLunas(order.paymentStatus)}
-                            >
-                              Pembayaran
-                            </button>
-                          </div>
-                          <div className="border-t pt-2">
-                            <p className="text-xs text-gray-500 mb-1">
-                              WhatsApp
-                            </p>
-
-                            <button
-                              className={`inline-flex items-center justify-center w-full px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 bg-green-100 text-green-800 hover:bg-green-200 border border-green-200 `}
-                              onClick={() =>
-                                handleWhatsAppChat(order.phoneNumber)
-                              }
-                            >
-                              Kirim Pesan
-                            </button>
-                          </div>
-                        </div>
                       </td>
                     </tr>
                   ))

@@ -1,6 +1,7 @@
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 import React from "react";
 
-const UserTable = ({ users = [], onDeleteUser }) => {
+const UserTable = ({ users = [] }) => {
   const handleWhatsAppChat = (phoneNumber) => {
     const formattedNumber = phoneNumber.startsWith("0")
       ? `62${phoneNumber.slice(1)}`
@@ -10,6 +11,34 @@ const UserTable = ({ users = [], onDeleteUser }) => {
 
     const whatsappUrl = `https://wa.me/${formattedNumber}`;
     window.open(whatsappUrl, "_blank");
+  };
+
+  const handleDeleteUser = async (userId) => {
+    const confirmDelete = window.confirm(
+      "Apakah Anda yakin ingin menghapus user ini?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(`${API_BASE_URL}/user/delete/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error?.message || "Gagal menghapus user");
+      }
+      console.log("User dihapus:", userId);
+    } catch (err) {
+      console.error("Delete user error:", err);
+    }
   };
 
   return (
@@ -101,9 +130,7 @@ const UserTable = ({ users = [], onDeleteUser }) => {
                             Chat
                           </button>
                           <button
-                            onClick={() =>
-                              onDeleteUser && onDeleteUser(user.id)
-                            }
+                            onClick={() => handleDeleteUser(user._id)}
                             className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-red-100 text-red-800 hover:bg-red-200 border border-red-200 transition-all duration-200 "
                           >
                             Hapus
@@ -215,7 +242,7 @@ const UserTable = ({ users = [], onDeleteUser }) => {
                     Chat WhatsApp
                   </button>
                   <button
-                    onClick={() => onDeleteUser && onDeleteUser(user.id)}
+                    onClick={() => handleDeleteUser(user._id)}
                     className="flex items-center justify-center px-4 py-3 rounded-xl text-sm font-medium bg-red-100 text-red-800 hover:bg-red-200 border border-red-200 transition-all duration-200 hover:scale-105"
                   >
                     <span className="mr-2">🗑️</span>

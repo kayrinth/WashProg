@@ -133,27 +133,37 @@ const OrderTable = ({ orders = [], onUpdateStatus, onUpdatePaymentStatus }) => {
       <div className="hidden md:block">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
           <div className="overflow-x-auto">
-            <table className="min-w-[700px] w-full text-sm">
+            <table className="min-w-[900px] w-full text-sm">
               <thead className="bg-black text-white">
                 <tr>
-                  <th className="py-4 px-6 text-left font-semibold">No</th>
-                  <th className="py-4 px-6 text-left font-semibold">
+                  <th className="py-4 px-4 text-left font-semibold w-16">No</th>
+                  <th className="py-4 px-4 text-center font-semibold w-32">
+                    Aksi
+                  </th>
+                  <th className="py-4 px-4 text-left font-semibold w-32">
                     Pelanggan
                   </th>
-                  <th className="py-4 px-6 text-left font-semibold">Tanggal</th>
-                  <th className="py-4 px-6 text-left font-semibold">Pesanan</th>
-                  <th className="py-4 px-6 text-left font-semibold">
+                  <th className="py-4 px-4 text-left font-semibold w-28">
+                    Tanggal
+                  </th>
+                  <th className="py-4 px-4 text-left font-semibold w-36">
+                    Pesanan
+                  </th>
+                  <th className="py-4 px-4 text-left font-semibold w-28">
                     Subtotal
                   </th>
-                  <th className="py-4 px-6 text-left font-semibold">
+                  <th className="py-4 px-4 text-left font-semibold w-32">
                     Total Harga
                   </th>
-                  <th className="py-4 px-6 text-left font-semibold">Alamat</th>
-                  <th className="py-4 px-6 text-left font-semibold">
+                  <th className="py-4 px-4 text-center font-semibold w-48 min-w-[200px]">
+                    Alamat
+                  </th>
+                  <th className="py-4 px-4 text-left font-semibold w-28">
                     Pembayaran
                   </th>
-                  <th className="py-4 px-6 text-left font-semibold">Status</th>
-                  <th className="py-4 px-6 text-center font-semibold">Aksi</th>
+                  <th className="py-4 px-4 text-left font-semibold w-24">
+                    Status
+                  </th>
                 </tr>
               </thead>
 
@@ -177,108 +187,12 @@ const OrderTable = ({ orders = [], onUpdateStatus, onUpdatePaymentStatus }) => {
                       key={order.id}
                       className="hover:bg-gray-50/50 transition-all duration-200"
                     >
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4">
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-gray-600 font-semibold text-sm">
                           {index + 1}
                         </div>
                       </td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center space-x-3">
-                          <div>
-                            <p className="font-medium text-gray-900 whitespace-nowrap">
-                              {order.userId.name}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6 text-gray-600">
-                        <div className="space-y-1 whitespace-nowrap text-sm">
-                          <p className="font-medium">
-                            {new Date(order.dateOrder).toLocaleDateString(
-                              "id-ID",
-                              {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              }
-                            )}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {new Date(order.dateOrder).toLocaleTimeString(
-                              "id-ID",
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              }
-                            )}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6 text-sm whitespace-nowrap">
-                        <div className="space-y-2">
-                          {order.itemsId.map((item, i) => (
-                            <div key={i}>
-                              <p className="font-medium text-gray-900">
-                                {item.items}
-                              </p>
-                              {item.services?.title && (
-                                <p className="text-xs text-blue-600 font-medium mt-1">
-                                  {item.services.title}
-                                </p>
-                              )}
-                              <div className="pt-6"></div>
-                            </div>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="py-4 px-6 whitespace-nowrap">
-                        <div className="space-y-2">
-                          {order.itemsId.map((item, i) => (
-                            <div key={i} className="">
-                              <p className="font-semibold text-gray-900 mt-6">
-                                Rp {item.subTotal.toLocaleString("id-ID")}
-                              </p>
-                              <div className=" pt-6"></div>
-                            </div>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
-                          <p className="text-sm font-medium text-blue-600 whitespace-nowrap">
-                            Rp {order.totalPrice.toLocaleString("id-ID")}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div>
-                          <p className="text-sm text-gray-700 line-clamp-3">
-                            {order.address}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <span
-                          className={`inline-flex justify-center  px-3 py-1 rounded-full text-xs font-medium border w-24 ${getStatusClass(
-                            order.paymentStatus
-                          )}`}
-                        >
-                          {order.paymentStatus}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <span
-                          className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium border w-24 ${getStatusClass(
-                            order.status
-                          )}`}
-                        >
-                          <span className="mr-1">
-                            {getStatusIcon(order.status)}
-                          </span>
-                          {order.status}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4">
                         <div className="flex flex-col space-y-2">
                           <button
                             className={`inline-flex items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
@@ -337,6 +251,102 @@ const OrderTable = ({ orders = [], onUpdateStatus, onUpdatePaymentStatus }) => {
                             </button>
                           </div>
                         </div>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center space-x-3">
+                          <div>
+                            <p className="font-medium text-gray-900 break-words max-w-[120px]">
+                              {order.userId.name}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-gray-600 whitespace-nowrap">
+                        <div className="space-y-1 text-sm">
+                          <p className="font-medium">
+                            {new Date(order.dateOrder).toLocaleDateString(
+                              "id-ID",
+                              {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              }
+                            )}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(order.dateOrder).toLocaleTimeString(
+                              "id-ID",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            )}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4 text-sm">
+                        <div className="space-y-2">
+                          {order.itemsId.map((item, i) => (
+                            <div key={i}>
+                              <p className="font-medium text-gray-900 break-words">
+                                {item.items}
+                              </p>
+                              {item.services?.title && (
+                                <p className="text-xs text-blue-600 font-medium mt-1 break-words">
+                                  {item.services.title}
+                                </p>
+                              )}
+                              <div className="pt-6"></div>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="space-y-2">
+                          {order.itemsId.map((item, i) => (
+                            <div key={i} className="">
+                              <p className="font-semibold text-gray-900 mt-6">
+                                Rp {item.subTotal.toLocaleString("id-ID")}
+                              </p>
+                              <div className=" pt-6"></div>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                          <p className="text-sm font-medium text-blue-600 whitespace-nowrap">
+                            Rp {order.totalPrice.toLocaleString("id-ID")}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="max-w-[200px] min-w-[150px]">
+                          <p className="text-sm text-gray-700 break-words whitespace-normal leading-relaxed">
+                            {order.address}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span
+                          className={`inline-flex justify-center px-3 py-1 rounded-full text-xs font-medium border w-24 ${getStatusClass(
+                            order.paymentStatus
+                          )}`}
+                        >
+                          {order.paymentStatus}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span
+                          className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium border w-24 ${getStatusClass(
+                            order.status
+                          )}`}
+                        >
+                          <span className="mr-1">
+                            {getStatusIcon(order.status)}
+                          </span>
+                          {order.status}
+                        </span>
                       </td>
                     </tr>
                   ))

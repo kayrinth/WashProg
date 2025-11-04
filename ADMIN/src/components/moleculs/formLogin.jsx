@@ -47,7 +47,7 @@ export default function LoginForm({ loginData, handleInputChange }) {
         <h1 className="text-2xl font-bold text-gray-800">Login</h1>
         <p className="text-gray-500 text-sm">Untuk Admin</p>
 
-        <form onSubmit={handleLogin} className="mt-4 space-y-3">
+        <form onSubmit={handleLogin} className="mt-4 space-y-3">  
           <Input
             type="text"
             name="phoneNumber"

@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card } from "../atoms";
+import { NavLink } from "react-router-dom";
 
 export default function DashboardTemplate({
   orders = {
@@ -44,7 +45,7 @@ export default function DashboardTemplate({
           />
         </div>
 
-        <div className="bg-white rounded-xl shadow p-4">
+        {/* <div className="bg-white rounded-xl shadow p-4">
           <h2 className="font-semibold mb-2">Pendapatan 7 Hari Terakhir</h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={orders.revenueData}>
@@ -55,17 +56,51 @@ export default function DashboardTemplate({
                 strokeWidth={2}
               />
               <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-              <XAxis dataKey="date" />
+              <XAxis dataKey="date" interval={0} angle={-30} textAnchor="end" />
               <YAxis />
               <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+        </div> */}
+        <div className="bg-white rounded-xl shadow p-4">
+          <h2 className="font-semibold mb-2">Pendapatan 7 Hari Terakhir</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart
+              data={orders.revenueData}
+              margin={{ top: 20, right: 10, left: -10, bottom: 30 }}
+            >
+              <CartesianGrid stroke="#e5e7eb" strokeDasharray="5 5" />
+              <XAxis
+                dataKey="date"
+                interval={0}
+                angle={-30}
+                textAnchor="end"
+                tick={{ fontSize: 12 }}
+              />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip />
+              <Line
+                type="monotone"
+                dataKey="amount"
+                stroke="#3b82f6"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       <div className="mt-6">
-        <div className="flex mb-2">
+        <div className="flex justify-between mb-2">
           <p className="font-semibold">Pesanan Menunggu</p>
+          <NavLink
+            to="/orders"
+            className="text-sm text-[#3b82f6] hover:underline"
+          >
+            Lihat Semua
+          </NavLink>
         </div>
         <div className="bg-white overflow-hidden border border-gray-100">
           <div className="overflow-x-auto">
