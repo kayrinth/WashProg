@@ -14,6 +14,13 @@ const orderController = {
       let totalPrice = 0;
       let orderItems = [];
 
+      const formatRupiah = (angka) =>
+        new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(angka);
+
       // Membuat order baru
       let order = new Order({
         userId,
@@ -87,12 +94,13 @@ const orderController = {
             (item, no) =>
               `${no + 1}. ${item.items} (${item.services.title}) x ${
                 item.quantity
-              } = Rp ${item.subTotal}`
+              } = Rp ${formatRupiah(item.subTotal)}`
           )
           .join("\n"),
         populatedOrder.address,
         totalPrice,
-        populatedOrder.dateOrder
+        populatedOrder.dateOrder,
+        populatedOrder.userId.phoneNumber
       );
     } catch (error) {
       console.error("Error dalam create order:", error);
