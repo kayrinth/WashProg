@@ -28,7 +28,7 @@ export default function FAQ() {
     {
       question: "Bagaimana cara menghubungi customer support?",
       answer:
-        "Anda dapat menghubungi dengan nomor Whatsapp, sebagai berikut: 0819123123, Kami akan menjawab pertanyaan Anda secepatnya.",
+        "Anda dapat menghubungi dengan nomor Whatsapp, sebagai berikut: 088221457899, Kami akan menjawab pertanyaan Anda secepatnya.",
     },
     {
       question: "Bisakah saya membatalkan pesanan?",
