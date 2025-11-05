@@ -171,6 +171,13 @@ const MapView = ({ orders }) => {
         return `${lat.toFixed(6)},${lng.toFixed(6)}`;
       });
 
+      if (
+        coordinates[0] ===
+        `${fixedPosition.lat.toFixed(6)},${fixedPosition.lng.toFixed(6)}`
+      ) {
+        coordinates[0] = "Current+Location";
+      }
+
       const googleMapsUrl = `https://www.google.com/maps/dir/${coordinates.join(
         "/"
       )}/?dirflg=d`;
@@ -183,7 +190,7 @@ const MapView = ({ orders }) => {
     };
 
     fetchRouteMenunggu();
-  }, [orders]);
+  }, [orders, menungguNodes]);
 
   //===================MENUNGGU ORDER===================//
 
@@ -240,6 +247,13 @@ const MapView = ({ orders }) => {
         return `${lat},${lng}`;
       });
 
+      if (
+        coordinates[0] ===
+        `${fixedPosition.lat.toFixed(6)},${fixedPosition.lng.toFixed(6)}`
+      ) {
+        coordinates[0] = "Current+Location";
+      }
+
       const googleMapsUrl = `https://www.google.com/maps/dir/${coordinates.join(
         "/"
       )}`;
@@ -251,13 +265,13 @@ const MapView = ({ orders }) => {
     };
 
     fetchRouteSelesai();
-  }, [orders]);
+  }, [orders, selesaiNodes]);
 
   //===================SELESAI ORDER===================//
 
   //===================SEMUA ORDER===================//
 
-  const semuaNode = useMemo(() => {
+  const semuaNodes = useMemo(() => {
     const nodes = {};
     semuaOrders.forEach((order, idx) => {
       nodes[alphabet[idx]] = {
@@ -278,17 +292,17 @@ const MapView = ({ orders }) => {
 
   useEffect(() => {
     const fetchRouteSemua = async () => {
-      if (Object.keys(semuaNode).length <= 1) return;
+      if (Object.keys(semuaNodes).length <= 1) return;
 
-      const nearestNode = getNearestNode(fixedPosition, semuaNode);
-      const { path } = tsp(semuaNode, nearestNode);
+      const nearestNode = getNearestNode(fixedPosition, semuaNodes);
+      const { path } = tsp(semuaNodes, nearestNode);
       console.log("🔍 Jalur terbaik:", path);
 
       let fullRoute = [];
 
       for (let i = 0; i < path.length - 1; i++) {
-        const from = semuaNode[path[i]];
-        const to = semuaNode[path[i + 1]];
+        const from = semuaNodes[path[i]];
+        const to = semuaNodes[path[i + 1]];
         const segment = await getRoute(from, to);
         fullRoute = fullRoute.concat(
           fullRoute.length > 0 &&
@@ -300,13 +314,20 @@ const MapView = ({ orders }) => {
 
       const fixedToStart = [
         [fixedPosition.lat, fixedPosition.lng],
-        [semuaNode[nearestNode].lat, semuaNode[nearestNode].lng],
+        [semuaNodes[nearestNode].lat, semuaNodes[nearestNode].lng],
       ];
 
       const coordinates = path.map((nodeKey) => {
-        const { lat, lng } = semuaNode[nodeKey];
+        const { lat, lng } = semuaNodes[nodeKey];
         return `${lat},${lng}`;
       });
+
+      if (
+        coordinates[0] ===
+        `${fixedPosition.lat.toFixed(6)},${fixedPosition.lng.toFixed(6)}`
+      ) {
+        coordinates[0] = "Current+Location";
+      }
 
       const googleMapsUrl = `https://www.google.com/maps/dir/${coordinates.join(
         "/"
@@ -319,7 +340,7 @@ const MapView = ({ orders }) => {
     };
 
     fetchRouteSemua();
-  }, [orders]);
+  }, [orders, semuaNodes]);
 
   //===================SEMUA ORDER===================//
 
