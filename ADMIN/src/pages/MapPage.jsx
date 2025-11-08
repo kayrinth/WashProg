@@ -39,7 +39,12 @@ export default function MapPage() {
   }, []);
 
   const memoOrders = useMemo(() => dataOrders, [dataOrders]);
-  if (loading) return <p>Loading orders...</p>;
+  if (loading)
+    return (
+      <p className="flex justify-center items-center h-screen">
+        Loading orders.......
+      </p>
+    );
   return (
     <div>
       <MapView orders={memoOrders} />
