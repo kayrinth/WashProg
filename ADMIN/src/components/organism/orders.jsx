@@ -1,11 +1,13 @@
 import { OrderTable } from "../moleculs/";
 import { useState, useEffect } from "react";
 import useAuthStore from "../../stores/useAuthStore";
+import Swal from "sweetalert2";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Orders() {
   const { token } = useAuthStore.getState();
   const [orders, setOrders] = useState([]);
+
   async function fetchOrders() {
     try {
       const res = await fetch(`${API_BASE_URL}/orders`, {
@@ -28,6 +30,16 @@ export default function Orders() {
 
   async function handleUpdateStatus(orderId, status) {
     try {
+      const result = await Swal.fire({
+        title: "Apakah kamu yakin?",
+        text: "Kamu ingin mengganti status ini?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, ubah status!",
+      });
+      if (!result.isConfirmed) return;
       const res = await fetch(`${API_BASE_URL}/orders/status/${orderId}`, {
         method: "PUT",
         headers: {
@@ -37,21 +49,38 @@ export default function Orders() {
         body: JSON.stringify({ status }),
       });
       const data = await res.json();
-      if (data.success) {
-        alert(`Status berhasil diubah menjadi "${status}"`);
-        fetchOrders();
-      } else {
+      if (!data.success) {
         console.error(data);
-        alert(data.message || "Gagal mengubah status");
+        return Swal.fire(
+          "Error",
+          data.message || "Gagal mengubah status",
+          "error"
+        );
       }
+      await Swal.fire({
+        title: "Berhasil!",
+        text: `Status berhasil diubah menjadi ${status}`,
+        icon: "success",
+      });
+      fetchOrders();
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan");
+      Swal.fire("Error", "Terjadi kesalahan", "error");
     }
   }
 
   async function handleUpdatePaymentStatus(orderId, paymentStatus) {
     try {
+      const result = await Swal.fire({
+        title: "Apakah kamu yakin?",
+        text: "Kamu ingin mengganti status ini?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, ubah status!",
+      });
+      if (!result.isConfirmed) return;
       const res = await fetch(`${API_BASE_URL}/orders/payment/${orderId}`, {
         method: "PUT",
         headers: {
@@ -61,16 +90,23 @@ export default function Orders() {
         body: JSON.stringify({ paymentStatus }),
       });
       const data = await res.json();
-      if (data.success) {
-        alert(`Status pembayaran berhasil diubah menjadi "${paymentStatus}"`);
-        fetchOrders();
-      } else {
+      if (!data.success) {
         console.error(data);
-        alert(data.message || "Gagal mengubah status pembayaran");
+        return Swal.fire(
+          "Error",
+          data.message || "Gagal mengubah status",
+          "error"
+        );
       }
+      await Swal.fire({
+        title: "Berhasil!",
+        text: `Status berhasil diubah menjadi ${paymentStatus}`,
+        icon: "success",
+      });
+      fetchOrders();
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan");
+      Swal.fire("Error", "Terjadi kesalahan", "error");
     }
   }
 
