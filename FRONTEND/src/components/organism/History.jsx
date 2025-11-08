@@ -1,5 +1,6 @@
 import { HistoryTable } from "../molecules";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import useAuthStore from "../../stores/useAuthStore";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -30,6 +31,16 @@ export default function History() {
 
   async function handleUpdateStatus(orderId, status) {
     try {
+      const result = await Swal.fire({
+        title: "Apakah Kamu yakin?",
+        text: "Kamu ingin membatalkan pesanan?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, batlakan pesanan!",
+      });
+      if (!result.isConfirmed) return;
       const res = await fetch(`${API_BASE_URL}/orders/status/${orderId}`, {
         method: "PUT",
         headers: {
@@ -39,16 +50,23 @@ export default function History() {
         body: JSON.stringify({ status }),
       });
       const data = await res.json();
-      if (data.success) {
-        alert(`Status berhasil diubah menjadi "${status}"`);
-        fetchOrders();
-      } else {
+      if (!data.success) {
         console.error(data);
-        alert(data.message || "Gagal mengubah status");
+        return Swal.fire(
+          "Error",
+          data.message || "Gagal mengubah status",
+          "error"
+        );
       }
+      await Swal.fire({
+        title: "Berhasil!",
+        text: `pesanan berhasil ${status}`,
+        icon: "success",
+      });
+      fetchOrders();
     } catch (error) {
       console.error(error);
-      alert("Terjadi kesalahan");
+      Swal.fire("Error", "Terjadi kesalahan", "error");
     }
   }
 
