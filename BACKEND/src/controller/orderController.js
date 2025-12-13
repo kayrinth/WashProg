@@ -322,13 +322,43 @@ const orderController = {
         id,
         { status },
         { new: true }
-      );
-
-      if (!updatedOrder) {
-        return next({
-          name: "NOT_FOUND",
-          message: "Order tidak ditemukan",
+      )
+        .populate("userId", "name phoneNumber")
+        .populate({
+          path: "itemsId",
+          populate: {
+            path: "services",
+            select: "title price",
+          },
         });
+
+      if (status === "diantar") {
+        const totalPrice = updatedOrder.itemsId.reduce(
+          (sum, item) => sum + item.subTotal,
+          0
+        );
+
+        const servicesText = updatedOrder.itemsId
+          .map(
+            (item, index) =>
+              `${index + 1}. ${item.items} (${item.services?.title ?? "-"}) x ${
+                item.quantity
+              } = Rp ${item.subTotal.toLocaleString("id-ID")}`
+          )
+          .join("\n");
+
+        try {
+          await WablastService.sendMessageDone(
+            updatedOrder.userId.name,
+            servicesText,
+            updatedOrder.address,
+            totalPrice,
+            updatedOrder.dateOrder,
+            updatedOrder.userId.phoneNumber
+          );
+        } catch (waError) {
+          console.error("WA gagal dikirim:", waError.message);
+        }
       }
 
       ResponseAPI.success(res, updatedOrder);
