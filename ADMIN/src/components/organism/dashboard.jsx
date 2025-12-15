@@ -45,7 +45,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 mx-auto">
-      <div className="flex flex-col items-start justify-start  p-6 rounded-xl">
+      <div className="flex flex-col items-start justify-start mt-14 md:mt-0">
         <h1 className="text-2xl font-semibold mb-1">
           Dashboard Admin Washprog
         </h1>
