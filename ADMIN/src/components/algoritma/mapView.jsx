@@ -180,6 +180,8 @@ const MapView = ({ orders }) => {
       );
     }
 
+    console.log("rute optimal : ", path);
+
     setterRoute(fullRoute);
     setterUrl(buildGMapsUrl(path, nodes));
     setLoading(false);
